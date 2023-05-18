@@ -23,7 +23,6 @@ from gpflow.covariances.dispatch import Kuf, Kuu
 
 tf.config.run_functions_eagerly(True)
 
-
 class LVMOGP(GPModel, InternalDataTrainingLossMixin):
     def __init__(
             self,
