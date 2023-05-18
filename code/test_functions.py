@@ -4,7 +4,6 @@ import gpflow
 import tensorflow as tf
 from gpflow import default_float
 
-
 class _TestFun:
 
     def __init__(self, domain, seed, n_fun, observed_dims, latent_dims=2, max_points=100, noise=0.1,
@@ -70,9 +69,6 @@ class _TestFun:
     def create_functions(self):
         """Creates the test functions, this function is defined in the child classes"""
         raise NotImplementedError("create_functions not implemented")
-
-    def get_x_new(self, x_full, n_fun, observed_dims, H_news):
-        return np.concatenate([np.vstack([x_full] * n_fun).reshape(len(H_news), observed_dims), H_news], axis=1)
 
     def create_data(self, n_points, random_idx=None):
         """Create the data. This is done by randomly choosing input values then evaluating the functions at those  points
@@ -216,7 +212,6 @@ class _TestFun:
             return None
 
 
-
 class TestFunUncorrelated(_TestFun):
 
     def __init__(self, domain, seed, n_fun, observed_dims, latent_dims=2, max_points=100, noise=0.1,
@@ -255,6 +250,7 @@ class TestFunUncorrelated(_TestFun):
         self.functions = functions
 
         return self.functions
+
 
 class TestFunLinearCorrelation(_TestFun):
 
@@ -324,9 +320,9 @@ class TestFunNonLinearCorrelation(_TestFun):
 
         # create points to fit the GP to following a sigmoid
 
-        x = np.linspace(self.domain[0]-1, self.domain[1]+1, 100).reshape(100, 1)
+        x = np.linspace(self.domain[0] - 1, self.domain[1] + 1, 100).reshape(100, 1)
 
-        ys = [1/(1+np.exp(-8*x+n)).reshape(100, 1) for n in self.constants]
+        ys = [1 / (1 + np.exp(-8 * x + n)).reshape(100, 1) for n in self.constants]
 
         kernel_X = gpflow.kernels.RBF(lengthscales=tf.convert_to_tensor(1,
                                                                         dtype=default_float()), variance=2,
