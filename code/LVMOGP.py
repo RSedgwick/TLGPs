@@ -109,7 +109,9 @@ class LVMOGP(GPModel, InternalDataTrainingLossMixin):
                                                                   "latent dimension"
 
     def fill_Hs(self):
-        """append Hs to Xs by function number"""
+        """Create the concatenated data, where the latent variables are appended to the observed data, by function
+        number. The variances for observed data points are set to zeros.
+        :return: concatenated data (N, D+Q), concatenated variance (N, D+Q)"""
 
         H_mean_vect = tf.reshape(tf.gather(_cast_to_dtype(self.H_data_mean, dtype=default_float()),
                                            _cast_to_dtype(self.X_data_fn, dtype=tf.int64)),
@@ -124,17 +126,16 @@ class LVMOGP(GPModel, InternalDataTrainingLossMixin):
     def maximum_log_likelihood_objective(self) -> tf.Tensor:
         return self.elbo()
 
-
-
     def elbo(self) -> tf.Tensor:
         """
-        Construct a tensorflow function to compute the bound on the marginal
-        likelihood.
+        A tensorflow function to compute the evidence lower bound on the marginal likelihood. This lower bound is adapted
+        from the lower bound in the GPflow BayesianGPLVM model, which is in turn adapted from Titsias 2009.
+        :return: a tensorflow Tensor representing the lower bound on the marginal likelihood
         """
+
         Y_data = self.data
         mu, var = self.fill_Hs()
         pH = DiagonalGaussian(mu, var)
-        # pX = DiagonalGaussian(self.X_data, self.X_data_var)
 
         num_inducing = self.inducing_variable.num_inducing
         psi0 = tf.reduce_sum(expectation(pH, self.kernel))
@@ -146,9 +147,6 @@ class LVMOGP(GPModel, InternalDataTrainingLossMixin):
             axis=0,
         )
         cov_uu = covariances.Kuu(self.inducing_variable, self.kernel, jitter=default_jitter())
-        # print(cov_uu)
-        # tf.print('cov_uu', np.linalg.cond(cov_uu))
-        # tf.print('psi2', np.linalg.cond(psi2))
 
         L = tf.linalg.cholesky(cov_uu)
         sigma2 = self.likelihood.variance
@@ -159,13 +157,11 @@ class LVMOGP(GPModel, InternalDataTrainingLossMixin):
         tmp = tf.linalg.triangular_solve(L, psi2, lower=True)
         AAT = tf.linalg.triangular_solve(L, tf.transpose(tmp), lower=True) / sigma2
         B = AAT + tf.eye(num_inducing, dtype=default_float())
-        # tf.print(B)
         LB = tf.linalg.cholesky(B)
-        # tf.print('B', np.linalg.cond(B))
         log_det_B = 2.0 * tf.reduce_sum(tf.math.log(tf.linalg.diag_part(LB)))
         c = tf.linalg.triangular_solve(LB, tf.linalg.matmul(A, Y_data), lower=True) / sigma
 
-        # KL[q(x) || p(x)]
+        # KL[q(x_tilde) || p(x_tilde)]
         dH_data_var = (
             self.H_data_var
             if self.H_data_var.shape.ndims == 2
@@ -180,7 +176,6 @@ class LVMOGP(GPModel, InternalDataTrainingLossMixin):
             (tf.square(self.H_data_mean - self.H_prior_mean) + dH_data_var) / self.H_prior_var
         )
 
-
         # compute log marginal bound
         ND = to_default_float(tf.size(Y_data))
         bound = -0.5 * ND * tf.math.log(2 * np.pi * sigma2)
@@ -190,159 +185,11 @@ class LVMOGP(GPModel, InternalDataTrainingLossMixin):
         bound += -0.5 * D * (tf.reduce_sum(psi0) / sigma2 - tf.reduce_sum(tf.linalg.diag_part(AAT)))
         bound2 = bound
 
-        # kl = self.prior_kl()
-
         bound -= KL
-
-        # tf.print('elbo: ', bound, ' KL: ', KL, ' data fit term: ', bound2)
         self.KLH = KL
         self.datafit = bound2
 
-        # tf.print(bound)
         return bound
-
-    # def predict_f(self, Xnew: InputData, full_cov=False, full_output_cov=False) -> MeanAndVariance:
-    #     """
-    #     Compute the mean and variance of the latent function at some new points
-    #     Xnew. For a derivation of the terms in here, see the associated SGPR
-    #     notebook.
-    #     """
-    #     Y_data = self.data
-    #     X_data = self.X_data
-    #     X_mean_tilde, X_var_tilde = self.fill_Hs()
-    #     num_inducing = self.inducing_variable.num_inducing
-    #     err = Y_data - self.mean_function(X_data)
-    #     kuf = Kuf(self.inducing_variable, self.kernel, X_mean_tilde)
-    #     kuu = Kuu(self.inducing_variable, self.kernel, jitter=default_jitter())
-    #     Kus = Kuf(self.inducing_variable, self.kernel, Xnew)
-    #     sigma = tf.sqrt(self.likelihood.variance)
-    #     L = tf.linalg.cholesky(kuu)
-    #     A = tf.linalg.triangular_solve(L, kuf, lower=True) / sigma
-    #     B = tf.linalg.matmul(A, A, transpose_b=True) + tf.eye(num_inducing, dtype=default_float())
-    #     LB = tf.linalg.cholesky(B)
-    #     Aerr = tf.linalg.matmul(A, err)
-    #     c = tf.linalg.triangular_solve(LB, Aerr, lower=True) / sigma
-    #     tmp1 = tf.linalg.triangular_solve(L, Kus, lower=True)
-    #     tmp2 = tf.linalg.triangular_solve(LB, tmp1, lower=True)
-    #     mean = tf.linalg.matmul(tmp2, c, transpose_a=True)
-    #     if full_cov:
-    #         var = (
-    #             self.kernel(Xnew)
-    #             + tf.linalg.matmul(tmp2, tmp2, transpose_a=True)
-    #             - tf.linalg.matmul(tmp1, tmp1, transpose_a=True)
-    #         )
-    #         var = tf.tile(var[None, ...], [self.num_latent_gps, 1, 1])  # [P, N, N]
-    #     else:
-    #         var = (
-    #             self.kernel(Xnew, full_cov=False)
-    #             + tf.reduce_sum(tf.square(tmp2), 0)
-    #             - tf.reduce_sum(tf.square(tmp1), 0)
-    #         )
-    #         var = tf.tile(var[:, None], [1, 1]) # self.num_latent_gps
-    #     # tf.print(self.kernel(Xnew, full_cov=False), summarize=-1)
-    #     # tf.print(A, summarize=-1)
-    #     # tf.print(B, summarize=-1)
-    #     return mean + self.mean_function(Xnew), var
-
-    # def predict_f(self, Xnew: (InputData), full_cov=False, full_output_cov=False) -> MeanAndVariance:
-    #     """
-    #     Compute the mean and variance of the latent function at some new points
-    #     Xnew. For a derivation of the terms in here, see the associated SGPR
-    #     notebook.
-    #     """
-    #
-    #     Y_data = self.data
-    #     X_data = self.X_data
-    #     X_mean_tilde, X_var_tilde = self.fill_Hs()
-    #     pH = DiagonalGaussian(X_mean_tilde, X_var_tilde)
-    #
-    #     psi0 = tf.reduce_sum(expectation(pH, self.kernel))
-    #     psi1 = expectation(pH, (self.kernel, self.inducing_variable))
-    #     psi2 = tf.reduce_sum(
-    #         expectation(
-    #             pH, (self.kernel, self.inducing_variable), (self.kernel, self.inducing_variable)
-    #         ),
-    #         axis=0,
-    #     )
-    #     test = expectation(pH, self.kernel)
-    #     Xnew_mean = Xnew[0]
-    #     Xnew_var = Xnew[1]
-    #     pH_new = DiagonalGaussian(Xnew_mean, Xnew_var)
-    #
-    #     kuu = Kuu(self.inducing_variable, self.kernel, jitter=default_jitter())
-    #
-    #     # do I need to change somthing to ensure its k(x*,x*) not just k(x,x)??
-    #     psi0_new = expectation(pH_new, self.kernel)
-    #     psi1_new = expectation(pH_new, (self.kernel, self.inducing_variable))
-    #     psi2_new = tf.reduce_sum(
-    #         expectation(
-    #             pH_new, (self.kernel, self.inducing_variable), (self.kernel, self.inducing_variable)
-    #         ),
-    #         axis=0,
-    #     )
-    #
-    #     beta = 1/tf.sqrt(self.likelihood.variance)
-    #
-    #     # lamda1 = kuu + beta * psi2
-    #     # lamda2 = tf.matmul(Y_data, psi1_new)
-    #     # lamda3 = tf.matmul(psi1, lamda2, transpose_a=True)
-    #     # mean = beta * tf.linalg.triangular_solve(lamda1, lamda3, lower=True)
-    #
-    #     lamda1 = kuu + beta * psi2
-    #     lamda2 = tf.matmul(psi1, Y_data, transpose_a=True)
-    #     L_lamda1 = tf.linalg.cholesky(lamda1)
-    #     lamda = beta * tf.linalg.triangular_solve(L_lamda1, lamda2, lower=True)
-    #
-    #     mean = tf.matmul(tf.transpose(lamda), psi1_new, transpose_b=True)
-    #
-    #     num_inducing = self.inducing_variable.num_inducing
-    #     num_new = Xnew_mean.shape[0]
-    #     test = tf.matmul(psi1_new, psi1_new, transpose_a=True)
-    #     tmp = psi2_new - tf.matmul(psi1_new, psi1_new, transpose_a=True)
-    #     tmp2 = tf.matmul(tmp, lamda)
-    #     tmp3 = tf.matmul(lamda, tmp2, transpose_a=True)
-    #     Kuu_L = tf.linalg.cholesky(kuu)
-    #     L2 = tf.linalg.cholesky(kuu+beta*psi2)
-    #     tmp4 = tf.linalg.triangular_solve(Kuu_L, psi2_new)
-    #     tmp5 = tf.linalg.triangular_solve(L2, psi2_new)
-    #     tmp6 = tf.linalg.trace(tmp4 - tmp5) * tf.eye(num_new, dtype=default_float())
-    #     var = tmp3 + psi0_new * tf.eye(num_new, dtype=default_float()) - tmp6
-    #
-    #
-    #     # num_inducing = self.inducing_variable.num_inducing
-    #     # err = Y_data - self.mean_function(X_data)
-    #     # sigma = tf.sqrt(self.likelihood.variance)
-    #     # L = tf.linalg.cholesky(kuu)
-    #     # A = tf.linalg.triangular_solve(L, psi1, lower=True) / sigma
-    #     #
-    #     #
-    #     # B = tf.linalg.matmul(A, A, transpose_b=True) + tf.eye(num_inducing, dtype=default_float())
-    #     # LB = tf.linalg.cholesky(B)
-    #     # Aerr = tf.linalg.matmul(A, err)
-    #     # c = tf.linalg.triangular_solve(LB, Aerr, lower=True) / sigma
-    #     # tmp1 = tf.linalg.triangular_solve(L, Kus, lower=True)
-    #     # tmp2 = tf.linalg.triangular_solve(LB, tmp1, lower=True)
-    #     # mean = tf.linalg.matmul(tmp2, c, transpose_a=True)
-    #     # if full_cov:
-    #     #     var = (
-    #     #             self.kernel(Xnew_mean)
-    #     #             + tf.linalg.matmul(tmp2, tmp2, transpose_a=True)
-    #     #             - tf.linalg.matmul(tmp1, tmp1, transpose_a=True)
-    #     #     )
-    #     #     var = tf.tile(var[None, ...], [self.num_latent_gps, 1, 1])  # [P, N, N]
-    #     # else:
-    #     #     var = (
-    #     #             self.kernel(Xnew_mean, full_cov=False)
-    #     #             + tf.reduce_sum(tf.square(tmp2), 0)
-    #     #             - tf.reduce_sum(tf.square(tmp1), 0)
-    #     #     )
-    #     #     var = tf.tile(var[:, None], [1, 1])  # self.num_latent_gps
-    #     # # tf.print(self.kernel(Xnew, full_cov=False), summarize=-1)
-    #     # # tf.print(A, summarize=-1)
-    #     # # tf.print(B, summarize=-1)
-    #
-    #     test = self.mean_function(Xnew_mean)
-    #     return tf.transpose(mean) , tf.linalg.diag_part(var)
 
     def predict_log_density(self, data: OutputData) -> tf.Tensor:
         raise NotImplementedError
@@ -351,58 +198,39 @@ class LVMOGP(GPModel, InternalDataTrainingLossMixin):
             self, Xnew: InputData, full_cov: bool = False, full_output_cov: bool = False
     ) -> MeanAndVariance:
         """
-        Compute the mean and variance of the latent function at some new points.
-        Note that this is very similar to the SGPR prediction, for which
-        there are notes in the SGPR notebook.
+        Predict the mean and variance of observations at new input locations. This method can be used for predicting
+        function values at new locations on already observed surfaces, Xnew, or for prediction on previously unseen
+        surfaces, i.e. at new values of H. This method integrates over the distribution of the latent variables, H,
+        rather than taking H to be a point estimate.
+
         Note: This model does not allow full output covariances.
         :param Xnew: points at which to predict
+        :param full_cov: whether to return the full covariance matrix, or just the diagonal`
+        :param full_output_cov: whether to return the full covariance matrix, or just the diagonal`
+        :return: a tuple of the mean and variance of the latent function at the points Xnew
         """
         if full_output_cov:
             raise NotImplementedError
 
-        Y_data = self.data
-        X_data = self.X_data
+        # concatenate the training data with the H means and variances
         X_mean_tilde, X_var_tilde = self.fill_Hs()
         pH = DiagonalGaussian(X_mean_tilde, X_var_tilde)
 
-        # psi0 = tf.reduce_sum(expectation(pH, self.kernel))
-        # psi1 = expectation(pH, (self.kernel, self.inducing_variable))
-        # psi2 = tf.reduce_sum(
-        #     expectation(
-        #         pH, (self.kernel, self.inducing_variable), (self.kernel, self.inducing_variable)
-        #     ),
-        #     axis=0,
-        # )
-        # test = expectation(pH, self.kernel)
         Xnew_mean = Xnew[0]
         Xnew_var = Xnew[1]
         pH_new = DiagonalGaussian(Xnew_mean, Xnew_var)
-
-        # kuu = Kuu(self.inducing_variable, self.kernel, jitter=default_jitter())
-
-        # do I need to change somthing to ensure its k(x*,x*) not just k(x,x)??
-        # psi0_new = expectation(pH_new, self.kernel)
         psi1_new = expectation(pH_new, (self.kernel, self.inducing_variable))
-        # psi2_new = tf.reduce_sum(
-        #     expectation(
-        #         pH_new, (self.kernel, self.inducing_variable), (self.kernel, self.inducing_variable)
-        #     ),
-        #     axis=0,
-        # )
-
-        pX = pH
 
         Y_data = self.data
         num_inducing = self.inducing_variable.num_inducing
-        psi1 = expectation(pX, (self.kernel, self.inducing_variable))
+        psi1 = expectation(pH, (self.kernel, self.inducing_variable))
         psi2 = tf.reduce_sum(
             expectation(
-                pX, (self.kernel, self.inducing_variable), (self.kernel, self.inducing_variable)
+                pH, (self.kernel, self.inducing_variable), (self.kernel, self.inducing_variable)
             ),
             axis=0,
         )
         jitter = default_jitter()
-        # Kus = covariances.Kuf(self.inducing_variable, self.kernel, Xnew)
         sigma2 = self.likelihood.variance
         L = tf.linalg.cholesky(covariances.Kuu(self.inducing_variable, self.kernel, jitter=jitter))
 
