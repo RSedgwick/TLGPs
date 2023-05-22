@@ -174,7 +174,7 @@ class _TestFun:
                 idx = np.where(self.fun_no == i)
                 x_ = self.xs[i]
                 y_ = self.ys[i]
-                # ax[i].scatter(x_, y_, label=f'data  {i + 1}')
+                ax[i].scatter(x_, y_, label=f'data  {i + 1}')
                 ax[i].set_xlabel('x')
                 ax[i].set_ylabel('y')
 
