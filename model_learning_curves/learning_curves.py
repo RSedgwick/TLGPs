@@ -95,7 +95,7 @@ final_models_dict = get_final_models_dict(models_dict)
 
 plot_lmls(lmls)
 
-x=0
+x = 0
 
 # for each model: fit each initialisation for n restarts and save the lml and rmse and nlpd for each. also save the results
 # for the best of each model

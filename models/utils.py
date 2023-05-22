@@ -273,3 +273,23 @@ def train_gp(gp):
 
     return gp, lmls
 
+def get_metrics(final_models_dict, domain):
+
+    x_new = np.linspace(domain[0], domain[1], 100)
+
+    for model_name, model in final_models_dict.items():
+        pred_mu, pred_var = model.predict_y(Xnew)
+
+        nlpds = get_nlpd(pred_mu, pred_var,  y_true)
+        abs_errors = get_abs_error(pred_mu, y_true)
+
+    pass
+
+def get_abs_error(mu, y_true):
+    abs_error = np.sqrt(np.square(y_true.ravel() - mu))
+    return abs_error
+
+def get_nlpd(mu, sig2, y_true):
+    nlpd = - (-0.5 * np.log(2 * np.pi) - 0.5 * np.log(sig2)
+              - 0.5 * (np.square(y_true.ravel().reshape(len(y_true.ravel()), ) - mu)) / sig2)
+    return nlpd
