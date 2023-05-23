@@ -5,7 +5,6 @@ from gpflow.config import default_float
 import tensorflow_probability as tfp
 
 
-
 def get_initialisations_lmc(data_X, data_y, fun_nos, n_fun, observed_dims, latent_dims, n_restarts=1):
     """Define the initialisations for the LMC. This returns a dictionary of dictionaries, with each of the initialisation
     types for each random restart. The initialisations are:
@@ -27,19 +26,21 @@ def get_initialisations_lmc(data_X, data_y, fun_nos, n_fun, observed_dims, laten
                       "n_fun": n_fun,
                       "observed_dims": observed_dims,
                       "lmc_rank": 2,
-                      "lengthscales_X": [0.1, 0.1][:observed_dims],
                       "kernel_var_init": 1,
                       "lik_var_init": np.var(data_y) * 0.01,
                       "W_init": np.random.uniform(0.1, 1, [n_fun, latent_dims]),
                       "kappa_init": np.random.uniform(0.1, 1, [n_fun, ])}
 
     initialisations = {restart: {'random_W_and_k': {**base_init_dict, **{
+        "lengthscales_X": np.random.uniform(0, 1, observed_dims),
         "W_init": np.random.uniform(0.1, 1, [n_fun, latent_dims]),
         "kappa_init": np.random.uniform(0.1, 1, [n_fun, ])}},
                                  'random_W_and_k_0': {**base_init_dict, **{
+                                     "lengthscales_X": np.random.uniform(0, 1, observed_dims),
                                      "W_init": np.random.uniform(0.1, 1, [n_fun, latent_dims]),
                                      "kappa_init": np.ones(n_fun, ) * 1e-4}},
                                  'random_W_and_k_1': {**base_init_dict, **{
+                                     "lengthscales_X": np.random.uniform(0, 1, observed_dims),
                                      "W_init": np.random.uniform(0.1, 1, [n_fun, latent_dims]),
                                      "kappa_init": np.ones(n_fun, )}}} for restart in range(n_restarts)}
 
@@ -65,11 +66,16 @@ def get_initialisations_mo_indi(data_X, data_y, fun_nos, n_fun, observed_dims, n
                       "n_fun": n_fun,
                       "observed_dims": observed_dims,
                       "lmc_rank": 2,
-                      "lengthscales_X": [0.1, 0.1][:observed_dims],
                       "kernel_var_init": 1,
                       "lik_var_init": np.var(data_y) * 0.01}
 
-    initialisations = {restart: {'mo_restart': base_init_dict} for restart in range(n_restarts)}
+    initialisations = {restart: {'random restart 1': {**base_init_dict, **{
+        "lengthscales_X": np.random.uniform(0, 1, observed_dims)}},
+                                 'random restart 2': {**base_init_dict, **{
+                                     "lengthscales_X": np.random.uniform(0, 1, observed_dims)}},
+                                 'random restart 3': {**base_init_dict, **{
+                                     "lengthscales_X": np.random.uniform(0, 1, observed_dims)}},
+                                 } for restart in range(n_restarts)}
 
     return initialisations
 
@@ -89,11 +95,16 @@ def get_initialisations_avg(data_X, data_y, fun_nos, observed_dims, n_restarts=1
                       "data_y": data_y,
                       "fun_nos": fun_nos,
                       "observed_dims": observed_dims,
-                      "lengthscales_X": [0.1, 0.1][:observed_dims],
                       "kernel_var_init": 1,
                       "lik_var_init": np.var(data_y) * 0.01}
 
-    initialisations = {restart: {'avg_restart': base_init_dict} for restart in range(n_restarts)}
+    initialisations = {restart: {'random restart 1': {**base_init_dict, **{
+                                "lengthscales_X": np.random.uniform(0, 1, observed_dims)}},
+                                 'random restart 2': {**base_init_dict, **{
+                                     "lengthscales_X": np.random.uniform(0, 1, observed_dims)}},
+                                 'random restart 3': {**base_init_dict, **{
+                                     "lengthscales_X": np.random.uniform(0, 1, observed_dims)}}
+                                 } for restart in range(n_restarts)}
 
     return initialisations
 
@@ -126,6 +137,7 @@ def get_initialisations_lvmogp(data_X, data_y, fun_nos, n_fun, observed_dims, la
 
     return initialisations
 
+
 def lvmogp_random_initalisations(data_X, data_y, fun_nos, n_fun, observed_dims, latent_dims_lvmogp):
     """Create an initalisatin dictoinary for the lvmogp model with random initialisation of the latent variables.
     :param data_X: the X data
@@ -150,7 +162,7 @@ def lvmogp_random_initalisations(data_X, data_y, fun_nos, n_fun, observed_dims, 
                       "data_y": data_y,
                       "fun_nos": fun_nos,
                       "lengthscales": [0.1, 0.1][:observed_dims] + np.random.uniform(0, 1,
-                                                                                          latent_dims_lvmogp).tolist(),
+                                                                                     latent_dims_lvmogp).tolist(),
                       "kernel_var": 1.0,
                       "H_mean": H_mean,
                       "H_var": H_var,
@@ -177,10 +189,10 @@ def lvmogp_mo_pca_initalisations(data_X, data_y, fun_nos, observed_dims, latent_
     :return: dictionary of the the initialisations"""
     lengthscales_x = np.random.uniform(0, 1, observed_dims)
 
-
     # make the inducing points
-    inducing_point_xs = tf.convert_to_tensor(np.vstack([np.linspace(domain[0], domain[1], 20).reshape(20, 1)] * len(np.unique(fun_nos))),
-                                             dtype=default_float())
+    inducing_point_xs = tf.convert_to_tensor(
+        np.vstack([np.linspace(domain[0], domain[1], 20).reshape(20, 1)] * len(np.unique(fun_nos))),
+        dtype=default_float())
 
     fun_nos_new = np.hstack([[fun_no] * 20 for fun_no in np.unique(fun_nos)])
     inducing_point_fns = tf.convert_to_tensor(fun_nos_new.reshape(len(fun_nos_new), 1), dtype=default_float())
@@ -216,7 +228,8 @@ def lvmogp_mo_pca_initalisations(data_X, data_y, fun_nos, observed_dims, latent_
 
     mo_indi_mu, mo_indi_sig2 = mo_indi.predict_f(mo_indi.inducing_variable.Z)
 
-    mo_indi_mean = mo_indi_mu.numpy().reshape(int(len(np.unique(fun_nos))), int(len(mo_indi.inducing_variable.Z.numpy()) / len(np.unique(fun_nos))))
+    mo_indi_mean = mo_indi_mu.numpy().reshape(int(len(np.unique(fun_nos))),
+                                              int(len(mo_indi.inducing_variable.Z.numpy()) / len(np.unique(fun_nos))))
 
     H_mean_init, fracs = pca_reduce(tf.convert_to_tensor(mo_indi_mean, dtype=default_float()),
                                     latent_dims_lvmogp)
@@ -243,6 +256,7 @@ def lvmogp_mo_pca_initalisations(data_X, data_y, fun_nos, observed_dims, latent_
         return initialisation, mo_indi_mean
     else:
         return initialisation
+
 
 def lvmogp_gpy_initalisations(data_X, data_y, fun_nos, observed_dims, latent_dims_lvmogp, n_fun, domain):
     """Create an initalisation dictoinary for the LVMOGP model based on the initialisation used in the GPy package:
@@ -318,6 +332,7 @@ def lvmogp_gpy_initalisations(data_X, data_y, fun_nos, observed_dims, latent_dim
                       "n_u": 100}
 
     return initialisation
+
 
 def pca_reduce(X: tf.Tensor, latent_dim: tf.Tensor) -> tf.Tensor:
     """

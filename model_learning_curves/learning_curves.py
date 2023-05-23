@@ -6,7 +6,7 @@
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
-from models.utils import build_models, train_models, get_final_models_dict ,plot_lmls
+from models.utils import build_models, train_models, get_final_models_dict, plot_lmls, get_metrics
 
 import os
 import pathlib as pl
@@ -51,7 +51,7 @@ else:
 plot_figs = True
 train_inducing = True  # whether we train the inducing points or not
 
-model_names = ['lmc', 'mo_indi', 'lvmogp', 'avg']
+model_names = ['lmc', 'mo_indi', 'avg'] # 'lvmogp',
 n_new_funs = 10
 data_type_name = f'two_observed_{n_new_funs}_new'
 n_fun = 2 + n_new_funs
@@ -92,6 +92,8 @@ models_dict = build_models(model_names, data_X, data_y, fun_nos, n_fun, observed
 models_dict, lmls = train_models(models_dict)
 
 final_models_dict = get_final_models_dict(models_dict)
+
+results_df = get
 
 plot_lmls(lmls)
 

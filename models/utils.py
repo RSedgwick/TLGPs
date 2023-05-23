@@ -113,7 +113,7 @@ def get_final_models_dict(models_dict):
         for restart, mod_dict in model_dict.items():
             for init_type, model in mod_dict.items():
                 final_lmls.append(model.maximum_log_likelihood_objective())
-                gps.append(gps)
+                gps.append(model)
         arg_best_lml = np.argmax(final_lmls)
         final_models_dict[model_name] = gps[arg_best_lml]
 
@@ -122,15 +122,19 @@ def get_final_models_dict(models_dict):
 
 def plot_lmls(LMLs):
 
-    fig, axs = plt.subplots(ncols=len(LMLs), figsize=(4, 16))
+    fig, axs = plt.subplots(ncols=len(LMLs), figsize=(16, 4))
+    i=0
+    for model_name, model_dict in LMLs.items():
 
-    for i, model_name, model_dict in enumerate(LMLs.items()):
         for restart, lml_dict in model_dict.items():
             for init_type, lml in lml_dict.items():
                 if lml is not None:
-                    axs[i].plot(lml, label=f'{init_type}, restart {restart}')
+                    axs[i].plot(range(len(lml)), lml, label=f'{init_type}, restart {restart}')
                     axs[i].legend()
                     axs[i].set_title(model_name)
+                    axs[i].set_xlabel('iteration')
+                    axs[i].set_ylabel('log marginal likelihood')
+        i+=1
     plt.show()
 
 def lmc_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, lengthscales_X, kernel_var_init, lik_var_init,
@@ -205,10 +209,9 @@ def avg_init(data_X, data_y, fun_nos, observed_dims, lengthscales_X, kernel_var_
     :param lik_var_init: initial value for the likelihood variance
    """
 
-    X_lmc = np.hstack([data_X, fun_nos])
     y = data_y
     k = gpflow.kernels.RBF(lengthscales=lengthscales_X, variance=kernel_var_init, active_dims=range(observed_dims))
-    avg_gp = gpflow.models.GPR(data=(tf.convert_to_tensor(X_lmc, dtype=default_float()),
+    avg_gp = gpflow.models.GPR(data=(tf.convert_to_tensor(data_X, dtype=default_float()),
                                   tf.convert_to_tensor(y, dtype=default_float())), kernel=k)
     avg_gp.likelihood.variance.assign(lik_var_init)
 
@@ -273,17 +276,87 @@ def train_gp(gp):
 
     return gp, lmls
 
-def get_metrics(final_models_dict, domain):
+def get_metrics(final_models_dict, test_fun, domain, n_fun, observed_dims, n_new_functions):
+    """calculate the root mean squared error (RMSE) and negative log predictive density (NLPD) of each of the models
+    returning a dataframe with the results in.
+    :param final_models_dict: dictionary of the models
+    :param test_fun: the test functions object
+    :param domain: domain of the data
+    :param n_fun: the total number of functions
+    :param n_new_functions: the number of new functions
+    :return results_df: dataframe containing the RMSE and NLPD and LML for each of the models"""
+    # format Xnew
+    x_new, fun_nos, x_new_lmc, x_new_lvmogp = get_gridpoints(domain, n_fun, final_models_dict, observed_dims,
+                                                             n_points=100)
 
-    x_new = np.linspace(domain[0], domain[1], 100)
+    model_x_news = {'avg': x_new, 'mo_indi': x_new_lmc, 'lmc': x_new_lmc, 'lvmogp': x_new_lvmogp}
 
+    # get the true data values at the grid points
+    ys_new = []
+    for fun in test_fun.functions:
+        y_new, _ = fun.predict_y(x_new)
+        ys_new.append(y_new)
+
+    res_dfs = []
     for model_name, model in final_models_dict.items():
-        pred_mu, pred_var = model.predict_y(Xnew)
+        NLPDs = []
+        RMSEs = []
+        NLPDs_new_only = []
+        RMSEs_new_only = []
+        x = model_x_news[model_name]
+        pred_mu, pred_var = model.predict_y(x)
+        for i, fun_no in enumerate(range(fun_nos)):
+            if model_name == 'avg':
+                idx = range(len(x_new))
+            else:
+                idx = np.argwhere(fun_nos == fun_no)[0]
+            mu = pred_mu.numpy()[idx].flatten()
+            sig2 = pred_var.numpy()[idx].flatten()
+            nlpds = get_nlpd(mu, sig2,  ys_new[i].numpy().flatten())
+            abs_errors = get_abs_error(mu, ys_new[i].numpy().flatten())
+            NLPDs.append(nlpds)
+            RMSEs.append(abs_errors)
+            if fun_no >= len(n_fun - n_new_functions):
+                NLPDs_new_only.append(nlpds)
+                RMSEs_new_only.append(abs_errors)
+        nlpd = np.mean(NLPDs)
+        rmse = np.sqrt(np.mean(np.square(RMSEs)))
+        nlpd_new_only = np.mean(NLPDs_new_only)
+        rmse_new_only = np.sqrt(np.mean(np.square(RMSEs_new_only)))
+        row_df = pd.DataFrame(data=[model_name, nlpd, rmse, nlpd_new_only, rmse_new_only,
+                                    model.maximum_log_likelihood_objective().numpy()],
+                              columns=['model', 'nlpd', 'rmse', 'nlpd_new_surface', 'rmse_new_surface',  'lml'])
+        res_dfs.append(row_df)
 
-        nlpds = get_nlpd(pred_mu, pred_var,  y_true)
-        abs_errors = get_abs_error(pred_mu, y_true)
+    results_df = pd.merge(res_dfs)
 
-    pass
+    return results_df
+
+def get_gridpoints(domain, n_fun, final_models_dict, observed_dims, n_points=100):
+    """return grid points across domain on each function, formatted in the different ways the models need"""
+
+    x_new = np.linspace(domain[0], domain[1], n_points)
+    fun_nos = np.hstack([[fun_no] * n_points for fun_no in range(n_fun)]).reshape(n_points * n_fun, observed_dims)
+    test = np.tile(x_new, n_fun)
+    x_new_lmc = np.hstack([np.tile(x_new, n_fun).reshape(n_points * n_fun, observed_dims), fun_nos])
+
+    if 'lvmogp' in final_models_dict.keys():
+        lvmogp = final_models_dict['lvmogp']
+
+        H_mean_vect = tf.reshape(tf.gather(_cast_to_dtype(lvmogp.H_data_mean, dtype=default_float()),
+                                           _cast_to_dtype(fun_nos, dtype=tf.int64)),
+                                 [len(np.tile(x_new, n_fun)), lvmogp.H_data_mean.numpy().shape[1]])
+        H_var_vect = tf.reshape(tf.gather(_cast_to_dtype(lvmogp.H_data_var, dtype=default_float()),
+                                          _cast_to_dtype(fun_nos, dtype=tf.int64)),
+                                [len(np.tile(x_new, n_fun)), lvmogp.H_data_mean.numpy().shape[1]])
+
+        Xnew_mean = tf.concat([tf.convert_to_tensor(np.tile(x_new, n_fun), default_float()), H_mean_vect], axis=1)
+        Xnew_var = tf.concat([tf.zeros(np.tile(x_new, n_fun).shape, dtype=default_float()), H_var_vect], axis=1)
+        x_new_lvmogp = [Xnew_mean, Xnew_var]
+    else:
+        x_new_lvmogp = None
+
+    return x_new, fun_nos, x_new_lmc, x_new_lvmogp
 
 def get_abs_error(mu, y_true):
     abs_error = np.sqrt(np.square(y_true.ravel() - mu))
