@@ -17,6 +17,7 @@ from gpflow.models.gpr import GPR
 from gpflow.models.model import GPModel, MeanAndVariance
 from gpflow.models.training_mixins import InputData, InternalDataTrainingLossMixin, OutputData
 from gpflow.models.util import data_input_to_tensor, inducingpoint_wrapper
+from gpflow.utilities import assert_params_false
 
 from gpflow import kullback_leiblers
 from gpflow.covariances.dispatch import Kuf, Kuu
@@ -259,3 +260,40 @@ class LVMOGP(GPModel, InternalDataTrainingLossMixin):
             shape = tf.stack([1, tf.shape(Y_data)[1]])
             var = tf.tile(tf.expand_dims(var, 1), shape)
         return mean + self.mean_function(Xnew_mean), var
+
+    def predict_y(
+        self, Xnew: InputData, full_cov: bool = False, full_output_cov: bool = False
+    ) -> MeanAndVariance:
+        r"""
+        Compute the mean and variance of the held-out data at the input points.
+
+        Given $x_i$ this computes $y_i$, for:
+
+        .. math::
+           :nowrap:
+
+           \begin{align}
+               \theta        & \sim p(\theta) \\
+               f             & \sim \mathcal{GP}(m(x), k(x, x'; \theta)) \\
+               f_i           & = f(x_i) \\
+               y_i \,|\, f_i & \sim p(y_i|f_i)
+           \end{align}
+
+
+        For an example of how to use ``predict_y``, see
+        :doc:`../../../../notebooks/getting_started/basic_usage`.
+
+        :param Xnew:
+            Input locations at which to compute mean and variance.
+        :param full_cov:
+            If ``True``, compute the full covariance between the inputs.
+            If ``False``, only returns the point-wise variance.
+        :param full_output_cov:
+            If ``True``, compute the full covariance between the outputs.
+            If ``False``, assumes outputs are independent.
+        """
+        # See https://github.com/GPflow/GPflow/issues/1461
+        assert_params_false(self.predict_y, full_cov=full_cov, full_output_cov=full_output_cov)
+
+        f_mean, f_var = self.predict_f(Xnew, full_cov=full_cov, full_output_cov=full_output_cov)
+        return self.likelihood.predict_mean_and_var(Xnew[0], f_mean, f_var)

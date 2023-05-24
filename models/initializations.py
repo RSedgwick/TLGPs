@@ -27,7 +27,7 @@ def get_initialisations_lmc(data_X, data_y, fun_nos, n_fun, observed_dims, laten
                       "observed_dims": observed_dims,
                       "lmc_rank": 2,
                       "kernel_var_init": 1,
-                      "lik_var_init": np.var(data_y) * 0.01,
+                      "lik_var_init": np.random.uniform(0, 0.1), #np.var(data_y) * 0.01,
                       "W_init": np.random.uniform(0.1, 1, [n_fun, latent_dims]),
                       "kappa_init": np.random.uniform(0.1, 1, [n_fun, ])}
 
@@ -67,7 +67,7 @@ def get_initialisations_mo_indi(data_X, data_y, fun_nos, n_fun, observed_dims, n
                       "observed_dims": observed_dims,
                       "lmc_rank": 2,
                       "kernel_var_init": 1,
-                      "lik_var_init": np.var(data_y) * 0.01}
+                      "lik_var_init": np.random.uniform(0, 0.1)}  # }np.var(data_y) * 0.01}
 
     initialisations = {restart: {'random restart 1': {**base_init_dict, **{
         "lengthscales_X": np.random.uniform(0, 1, observed_dims)}},
@@ -96,7 +96,7 @@ def get_initialisations_avg(data_X, data_y, fun_nos, observed_dims, n_restarts=1
                       "fun_nos": fun_nos,
                       "observed_dims": observed_dims,
                       "kernel_var_init": 1,
-                      "lik_var_init": np.var(data_y) * 0.01}
+                      "lik_var_init": np.random.uniform(0, 0.1)} #np.var(data_y) * 0.01}
 
     initialisations = {restart: {'random restart 1': {**base_init_dict, **{
                                 "lengthscales_X": np.random.uniform(0, 1, observed_dims)}},
@@ -166,7 +166,7 @@ def lvmogp_random_initalisations(data_X, data_y, fun_nos, n_fun, observed_dims, 
                       "kernel_var": 1.0,
                       "H_mean": H_mean,
                       "H_var": H_var,
-                      "lik_variance": np.var(data_y) * 0.01,
+                      "lik_variance": np.random.uniform(0, 0.1), # np.var(data_y) * 0.01,
                       "train_inducing": True,
                       "n_u": 100}
 
@@ -327,7 +327,7 @@ def lvmogp_gpy_initalisations(data_X, data_y, fun_nos, observed_dims, latent_dim
                       "kernel_var": kern_variance,
                       "H_mean": gplvm.X_data_mean,
                       "H_var": gplvm.X_data_var,
-                      "lik_variance": np.var(data_y) * 0.01,
+                      "lik_variance": np.random.uniform(0, 0.1), # np.var(data_y) * 0.01,
                       "train_inducing": True,
                       "n_u": 100}
 
