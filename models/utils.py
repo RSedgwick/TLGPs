@@ -352,9 +352,12 @@ def plot_predictions(final_models_dict, test_fun, domain, n_fun, observed_dims, 
 
     # get the true data values at the grid points
     ys_new = []
+    fs_new = []
     for fun in test_fun.functions:
-        y_new, _ = fun.predict_y(x_new.reshape(100, 1))
+        f_new, _ = fun.predict_y(x_new.reshape(100, 1))
+        y_new = test_fun.function_with_noise(fun, x_new.reshape(100, 1), test_fun.noise)
         ys_new.append(y_new)
+        fs_new.append(f_new)
 
     for model_name, model in final_models_dict.items():
         x = model_x_news[model_name]
@@ -369,7 +372,9 @@ def plot_predictions(final_models_dict, test_fun, domain, n_fun, observed_dims, 
             axs[i].fill_between(x_new.flatten(),
                                 pred_mu.numpy()[idx].flatten() + np.sqrt(pred_var.numpy()[idx].flatten()),
                                 pred_mu.numpy()[idx].flatten() - np.sqrt(pred_var.numpy()[idx].flatten()), alpha=0.2)
-            axs[i].plot(x_new, ys_new[i].numpy(), linestyle=':')
+
+            axs[i].plot(x_new, fs_new[i].numpy(), linestyle=':')
+            axs[i].scatter(x_new, ys_new[i].numpy(), s=5, color='blue')
             idx_train = np.where([test_fun.fun_no == fun_no])[1]
             axs[i].scatter(test_fun.X[idx_train], test_fun.y[idx_train])
             axs[i].set_ylim(np.min(data_y) - 0.2, np.max(data_y) + 0.2)

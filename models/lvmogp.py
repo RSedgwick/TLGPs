@@ -297,3 +297,80 @@ class LVMOGP(GPModel, InternalDataTrainingLossMixin):
 
         f_mean, f_var = self.predict_f(Xnew, full_cov=full_cov, full_output_cov=full_output_cov)
         return self.likelihood.predict_mean_and_var(Xnew[0], f_mean, f_var)
+
+    def predict_f_point_predictions(self, Xnew: InputData, full_cov: bool = False, full_output_cov: bool = False
+                                    ) -> MeanAndVariance:
+
+        Y_data = self.data
+        X_data = self.X_data
+        X_mean_tilde, X_var_tilde = self.fill_Hs()
+        num_inducing = self.inducing_variable.num_inducing
+        err = Y_data - self.mean_function(X_data)
+        kuf = Kuf(self.inducing_variable, self.kernel, X_mean_tilde)
+        kuu = Kuu(self.inducing_variable, self.kernel, jitter=default_jitter())
+        Kus = Kuf(self.inducing_variable, self.kernel, Xnew)
+        sigma = tf.sqrt(self.likelihood.variance)
+        L = tf.linalg.cholesky(kuu)
+        A = tf.linalg.triangular_solve(L, kuf, lower=True) / sigma
+        B = tf.linalg.matmul(A, A, transpose_b=True) + tf.eye(num_inducing, dtype=default_float())
+        LB = tf.linalg.cholesky(B)
+        Aerr = tf.linalg.matmul(A, err)
+        c = tf.linalg.triangular_solve(LB, Aerr, lower=True) / sigma
+        tmp1 = tf.linalg.triangular_solve(L, Kus, lower=True)
+        tmp2 = tf.linalg.triangular_solve(LB, tmp1, lower=True)
+        mean = tf.linalg.matmul(tmp2, c, transpose_a=True)
+        if full_cov:
+            var = (
+                    self.kernel(Xnew)
+                    + tf.linalg.matmul(tmp2, tmp2, transpose_a=True)
+                    - tf.linalg.matmul(tmp1, tmp1, transpose_a=True)
+            )
+            var = tf.tile(var[None, ...], [self.num_latent_gps, 1, 1])  # [P, N, N]
+        else:
+            var = (
+                    self.kernel(Xnew, full_cov=False)
+                    + tf.reduce_sum(tf.square(tmp2), 0)
+                    - tf.reduce_sum(tf.square(tmp1), 0)
+            )
+            var = tf.tile(var[:, None], [1, 1])  # self.num_latent_gps
+
+        return mean + self.mean_function(Xnew), var
+
+    def predict_y_point_prediction(
+        self, Xnew: InputData, full_cov: bool = False, full_output_cov: bool = False
+    ) -> MeanAndVariance:
+        r"""
+        Compute the mean and variance of the held-out data at the input points.
+
+        Given $x_i$ this computes $y_i$, for:
+
+        .. math::
+           :nowrap:
+
+           \begin{align}
+               \theta        & \sim p(\theta) \\
+               f             & \sim \mathcal{GP}(m(x), k(x, x'; \theta)) \\
+               f_i           & = f(x_i) \\
+               y_i \,|\, f_i & \sim p(y_i|f_i)
+           \end{align}
+
+
+        For an example of how to use ``predict_y``, see
+        :doc:`../../../../notebooks/getting_started/basic_usage`.
+
+        :param Xnew:
+            Input locations at which to compute mean and variance.
+        :param full_cov:
+            If ``True``, compute the full covariance between the inputs.
+            If ``False``, only returns the point-wise variance.
+        :param full_output_cov:
+            If ``True``, compute the full covariance between the outputs.
+            If ``False``, assumes outputs are independent.
+        """
+        # See https://github.com/GPflow/GPflow/issues/1461
+        assert_params_false(self.predict_y, full_cov=full_cov, full_output_cov=full_output_cov)
+
+        f_mean, f_var = self.predict_f_point_predictions(Xnew, full_cov=full_cov, full_output_cov=full_output_cov)
+        return self.likelihood.predict_mean_and_var(Xnew, f_mean, f_var)
+
+
