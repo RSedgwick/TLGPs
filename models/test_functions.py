@@ -160,7 +160,7 @@ class _TestFun:
             plt.tight_layout()
             return None
 
-    def plot_data_seperate_plots(self, n_points=None):
+    def plot_data_seperate_plots(self):
         """plot the data in separate plots for each function"""
 
         fig, axs = plt.subplots(ncols=self.n_fun, figsize=(3 * self.n_fun, 3))
@@ -172,12 +172,8 @@ class _TestFun:
                 ys_mean, ys_var = fun.predict_y(self.x_full)
                 ax[i].plot(self.x_full, ys_mean.numpy(), label=f'function {i + 1}', alpha=0.5)
                 idx = np.where(self.fun_no == i)
-                if n_points:
-                    x_ = self.xs[idx][:n_points[i]]
-                    y_ = self.ys[idx][:n_points[i]]
-                else:
-                    x_ = self.xs[idx]
-                    y_ = self.ys[idx]
+                x_ = self.X[idx]
+                y_ = self.y[idx]
                 ax[i].scatter(x_, y_, label=f'data  {i + 1}')
                 ax[i].set_xlabel('x')
                 ax[i].set_ylabel('y')
