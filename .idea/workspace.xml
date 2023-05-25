@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="6e2d9556-704e-4d25-af62-883b224e8d9b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_learning_curves/model_comparisons.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/model_learning_curves/model_comparisons.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_learning_curves/model_optimizations.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/model_learning_curves/model_optimizations.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +129,7 @@
       <updated>1684399043092</updated>
       <workItem from="1684399044258" duration="53208000" />
       <workItem from="1684848445568" duration="22349000" />
-      <workItem from="1684943132739" duration="11541000" />
+      <workItem from="1684943132739" duration="21888000" />
     </task>
     <servers />
   </component>
@@ -191,6 +193,26 @@
           <url>notebook:///home/ruby/Transfer_Learning_Gaussian_Processes/notebooks/Comparing_LVMOGP_Prediction_Methods.ipynb</url>
           <line>145</line>
           <option name="timeStamp" value="95" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
+          <url>notebook:///home/ruby/Transfer_Learning_Gaussian_Processes/model_learning_curves/model_optimizations.ipynb</url>
+          <line>79</line>
+          <option name="timeStamp" value="117" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
+          <url>notebook:///home/ruby/Transfer_Learning_Gaussian_Processes/model_learning_curves/model_optimizations.ipynb</url>
+          <line>72</line>
+          <option name="timeStamp" value="118" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
+          <url>notebook:///home/ruby/Transfer_Learning_Gaussian_Processes/model_learning_curves/model_optimizations.ipynb</url>
+          <line>104</line>
+          <option name="timeStamp" value="122" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
+          <url>notebook:///home/ruby/Transfer_Learning_Gaussian_Processes/model_learning_curves/model_comparisons.ipynb</url>
+          <line>78</line>
+          <option name="timeStamp" value="123" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/lvmogp.py</url>
