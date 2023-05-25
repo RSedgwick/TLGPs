@@ -92,6 +92,7 @@ if plot_figs:
     plt.savefig(plot_path / f'data_seperate_{surface_type}_{data_type_name}_{n_new_points}_points_seed_{seed}_dseed_{data_seed}.png')
     plt.close()
 
+# build and train the models, then for each model type select the one with the best lml to be the final model
 models_dict = build_models(model_names, data_X, data_y, fun_nos, n_fun, observed_dims, latent_dims, latent_dims_lvmogp,
                            domain, n_restarts=3)
 
@@ -106,15 +107,15 @@ if plot_figs:
         plot_lvmogp_latent_variables(final_models_dict['lvmogp'], save=False, path=None, file_name=None)
     plt.show()
 
-
+# get the NLPD and RMSE of the models
 results_df = get_metrics(final_models_dict, test_fun, domain, n_fun, observed_dims, n_new_funs, n_grid_points=100)
 
 print('got metrics')
 path = pl.Path.home() / f'Transfer_Learning_GP_Results/'
 
+# get test data and the true functions
 x_new, _, _, _ = get_gridpoints(domain, n_fun, final_models_dict, observed_dims,
                                                              n_points=100)
-
 ys_new = []
 fs_new = []
 for fun in test_fun.functions:
@@ -123,10 +124,13 @@ for fun in test_fun.functions:
     ys_new.append(y_new)
     fs_new.append(f_new)
 
-
+# save the model hyperparameters, training log marginal likelihoods and data models can be reconstructed. Also save the
+# test data and the true functions
 save_models(models_dict, lmls, data_X, data_y, fun_nos, x_new, ys_new, fs_new, path,
             file_name=f'hyperparameters/hyperparameters_{surface_type}_{data_type_name}_{n_new_points}_points_seed_{seed}_dataseed_{data_seed}.pkl')
 print('saved models')
+
+# save the NLPDs and RMSEs
 save_results(results_df, path, seed, n_new_points, surface_type, n_new_funs, data_seed)
 
 print('run complete')
