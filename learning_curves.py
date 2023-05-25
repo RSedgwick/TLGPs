@@ -54,7 +54,7 @@ data_seed = 1
 plot_figs = False
 train_inducing = True  # whether we train the inducing points or not
 
-model_names = ['mo_indi', 'avg'] # 'lvmogp', 'lmc',
+model_names = ['mo_indi', 'lvmogp', 'lmc', 'avg'] #
 n_new_funs = 10
 data_type_name = f'two_observed_{n_new_funs}_new'
 n_fun = 2 + n_new_funs
