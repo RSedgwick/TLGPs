@@ -8,13 +8,10 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 from models.utils import build_models, train_models, get_final_models_dict, get_metrics, save_models, save_results,\
     plot_lmls, plot_predictions, plot_lvmogp_latent_variables, get_gridpoints
-
 import os
 import pathlib as pl
-from gpflow.utilities import read_values
-import pickle
 import sys
-import matplotlib as mpl
+
 
 # mpl.style.use('models/mystyle.mplstyle')
 

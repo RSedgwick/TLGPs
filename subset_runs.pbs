@@ -1,11 +1,11 @@
 #PBS -lwalltime=24:00:00
 #PBS -lselect=1:ncpus=8:mem=30gb
-#PBS -J 1-30
+#PBS -J 1-2
 
 cd $HOME/Transfer_Learning_Gaussian_Processes
 module load anaconda3/personal
 source activate tlgps
 
 
-python model_learning_curves/learning_curves.py $PBS_ARRAY_INDEX $SEED $DATASEED $RELATIONTYPE
+python learning_curves.py $PBS_ARRAY_INDEX $SEED $DATASEED $RELATIONTYPE
 
