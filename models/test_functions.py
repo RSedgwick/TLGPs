@@ -7,7 +7,7 @@ from gpflow import default_float
 class _TestFun:
 
     def __init__(self, domain, seed, n_fun, observed_dims, latent_dims=2, max_points=100, noise=0.1,
-                 n_grid_points=100, same_points=False, lengthscales_X=None):
+                 n_grid_points=100, same_points=False, lengthscales_X=None, data_seed=None):
         """ Class for generating test functions for the experiments
         :param domain: domain of the function
         :param int seed: seed for the random number generator
@@ -45,6 +45,7 @@ class _TestFun:
         self.h_new = None
         self.y = None
         self.seed = seed
+        self.data_seed = data_seed
 
         # lengthscales for observed dimensions if not defined
         if lengthscales_X is None:
@@ -53,6 +54,9 @@ class _TestFun:
             self.lengthscales_X = lengthscales_X
 
         self.functions = self.create_functions()
+
+        if data_seed:
+            np.random.seed(data_seed)
 
         if same_points:
             points = np.sort(np.random.uniform(self.domain[0], self.domain[1], (self.max_points, self.observed_dims)),
@@ -90,7 +94,6 @@ class _TestFun:
 
         if type(n_points) is int:
             n_points = [n_points] * self.n_fun
-        np.random.seed(self.seed)
         for i, fun in enumerate(self.functions):
             if random_idx is not None:
                 idx = random_idx
@@ -215,9 +218,9 @@ class _TestFun:
 class TestFunUncorrelated(_TestFun):
 
     def __init__(self, domain, seed, n_fun, observed_dims, latent_dims=2, max_points=100, noise=0.1,
-                 n_grid_points=100, same_points=False, lengthscales_X=None):
+                 n_grid_points=100, same_points=False, lengthscales_X=None, data_seed=None):
         super().__init__(domain, seed, n_fun, observed_dims, latent_dims, max_points, noise,
-                         n_grid_points, same_points, lengthscales_X)
+                         n_grid_points, same_points, lengthscales_X, data_seed=None)
 
     def create_functions(self):
         """Creates uncorrelated test functions. Each function is an independent sample from a Gaussian process
@@ -255,9 +258,9 @@ class TestFunUncorrelated(_TestFun):
 class TestFunLinearCorrelation(_TestFun):
 
     def __init__(self, domain, seed, n_fun, observed_dims, latent_dims=2, max_points=100, noise=0.1,
-                 n_grid_points=100, same_points=False, lengthscales_X=None):
+                 n_grid_points=100, same_points=False, lengthscales_X=None, data_seed=None):
         super().__init__(domain, seed, n_fun, observed_dims, latent_dims, max_points, noise,
-                         n_grid_points, same_points, lengthscales_X)
+                         n_grid_points, same_points, lengthscales_X, data_seed=None)
 
     def create_functions(self):
         """Creates uncorrelated test functions. Each function is an independent sample from a Gaussian process
@@ -304,14 +307,17 @@ class TestFunLinearCorrelation(_TestFun):
 class TestFunNonLinearCorrelation(_TestFun):
 
     def __init__(self, domain, seed, n_fun, observed_dims, latent_dims=2, max_points=100, noise=0.1,
-                 n_grid_points=100, same_points=False, lengthscales_X=None, constants=None):
-        super().__init__(domain, seed, n_fun, observed_dims, latent_dims, max_points, noise,
-                         n_grid_points, same_points, lengthscales_X)
+                 n_grid_points=100, same_points=False, lengthscales_X=None, constants=None, data_seed=None):
 
         if constants is None:
             self.constants = np.random.uniform(4, 12, n_fun)
         else:
             self.constants = constants
+
+        super().__init__(domain, seed, n_fun, observed_dims, latent_dims, max_points, noise,
+                         n_grid_points, same_points, lengthscales_X, data_seed=None)
+
+
 
     def create_functions(self):
         """Creates non-linearly correlated test functions. Each function is a GP fitted to arandomly offset sigmoid

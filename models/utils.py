@@ -10,8 +10,16 @@ from models.initializations import get_initialisations_mo_indi, get_initialisati
     get_initialisations_lmc
 import tensorflow_probability as tfp
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 
-def build_models(models, data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, latent_dims_lvmogp, domain, n_restarts=1):
+
+inch_conversion = 3.93701/100
+page_width = 142.4 *inch_conversion
+column_width = 67.2* inch_conversion
+
+
+def build_models(models, data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, latent_dims_lvmogp, domain,
+                 n_restarts=1):
     """a function for building the models, which first gets the initialisations then builds the models
     :param models: list of models to build
     :param data_X: list of data for each function
@@ -34,46 +42,47 @@ def build_models(models, data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank
             for restart, init in inits.items():
                 for init_type, init_val in init.items():
                     # try:
-                        models_dict[model_name][restart][init_type] = lmc_init(**init_val)
-                        print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
-                    # except:
-                    #     print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
-                    #     models_dict[model_name][restart][init_type] = None
+                    models_dict[model_name][restart][init_type] = lmc_init(**init_val)
+                    print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
+                # except:
+                #     print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
+                #     models_dict[model_name][restart][init_type] = None
         elif model_name == 'mo_indi':
             inits = get_initialisations_mo_indi(data_X, data_y, fun_nos, n_fun, observed_dims, n_restarts=n_restarts)
             for restart, init in inits.items():
                 for init_type, init_val in init.items():
                     # try:
-                        models_dict[model_name][restart][init_type] = mo_indi_init(**init_val)
-                        print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
-                    # except:
-                    #     print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
-                    #     models_dict[model_name][restart][init_type] = None
+                    models_dict[model_name][restart][init_type] = mo_indi_init(**init_val)
+                    print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
+                # except:
+                #     print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
+                #     models_dict[model_name][restart][init_type] = None
         elif model_name == 'avg':
             inits = get_initialisations_avg(data_X, data_y, fun_nos, observed_dims, n_restarts=n_restarts)
             for restart, init in inits.items():
                 for init_type, init_val in init.items():
                     # try:
-                        models_dict[model_name][restart][init_type] = avg_init(**init_val)
-                        print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
-                    # except:
-                    #     print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
-                    #     models_dict[model_name][restart][init_type] = None
+                    models_dict[model_name][restart][init_type] = avg_init(**init_val)
+                    print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
+                # except:
+                #     print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
+                #     models_dict[model_name][restart][init_type] = None
         elif model_name == 'lvmogp':
             inits = get_initialisations_lvmogp(data_X, data_y, fun_nos, n_fun, observed_dims, latent_dims_lvmogp,
                                                domain, n_restarts=n_restarts)
             for restart, init in inits.items():
                 for init_type, init_val in init.items():
                     # try:
-                        models_dict[model_name][restart][init_type] = lvmogp_init(**init_val)
-                        print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
-                    # except:
-                    #     print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
-                    #     models_dict[model_name][restart][init_type] = None
+                    models_dict[model_name][restart][init_type] = lvmogp_init(**init_val)
+                    print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
+                # except:
+                #     print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
+                #     models_dict[model_name][restart][init_type] = None
         else:
             raise ValueError(f'model_name {model_name} not recognised. model_name must be in'
                              f' ["lmc", "mo_indi", "avg", "lvmogp"]')
     return models_dict
+
 
 def train_models(models_dict):
     """train the models in the models_dict and record the log marginal likelihoods or ELBOs of the models in the training
@@ -100,6 +109,7 @@ def train_models(models_dict):
 
     return models_dict, LMLs
 
+
 def get_final_models_dict(models_dict):
     """select the restart that has the best log marginal likelihood for each model.
     :param models_dict: dictionary of dictionaries for all model restarts for all models
@@ -120,10 +130,10 @@ def get_final_models_dict(models_dict):
     return final_models_dict
 
 
-def plot_lmls(LMLs):
-
-    fig, axs = plt.subplots(ncols=len(LMLs), figsize=(16, 4))
-    i=0
+def plot_lmls(LMLs, save=False, path=None, file_name=None):
+    fig, axs = plt.subplots(ncols=len(LMLs), figsize=(20, 5))
+    i = 0
+    labels = {'mo_indi': 'MOGP', 'avg': 'AvgGP', 'lmc': 'LMC', 'lvm': 'LVMOGP'}
     for model_name, model_dict in LMLs.items():
 
         for restart, lml_dict in model_dict.items():
@@ -131,11 +141,16 @@ def plot_lmls(LMLs):
                 if lml is not None:
                     axs[i].plot(range(len(lml)), lml, label=f'{init_type}, restart {restart}')
                     axs[i].legend()
-                    axs[i].set_title(model_name)
+                    axs[i].set_title(labels[model_name])
                     axs[i].set_xlabel('iteration')
                     axs[i].set_ylabel('log marginal likelihood')
-        i+=1
-    plt.show()
+        i += 1
+    plt.suptitle('Log Marginal Likelihoods')
+    plt.tight_layout()
+    if save:
+        plt.savefig(path / file_name, bbox_inches='tight')
+        plt.close()
+
 
 def lmc_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, lengthscales_X, kernel_var_init, lik_var_init,
              W_init, kappa_init):
@@ -167,7 +182,9 @@ def lmc_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, lengthscal
 
     return lmc
 
-def mo_indi_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, lengthscales_X, kernel_var_init, lik_var_init):
+
+def mo_indi_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, lengthscales_X, kernel_var_init,
+                 lik_var_init):
     """function for initialising the multioutput independent Gaussian process. This method uses the LMC method but
     setting W=0 and kappa=1 and not trainable to make it behave like an independent GP, with no transfer learning
     between surfaces. This is so we can observed different points ond different functions as the GPflow MOGP model
@@ -196,6 +213,7 @@ def mo_indi_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, length
 
     return mo_indi
 
+
 def avg_init(data_X, data_y, fun_nos, observed_dims, lengthscales_X, kernel_var_init, lik_var_init):
     """function for initialising the average GP. This is where we just fit one function to all the data, disregarding
     the fact that it came from different functions.
@@ -212,10 +230,11 @@ def avg_init(data_X, data_y, fun_nos, observed_dims, lengthscales_X, kernel_var_
     y = data_y
     k = gpflow.kernels.RBF(lengthscales=lengthscales_X, variance=kernel_var_init, active_dims=range(observed_dims))
     avg_gp = gpflow.models.GPR(data=(tf.convert_to_tensor(data_X, dtype=default_float()),
-                                  tf.convert_to_tensor(y, dtype=default_float())), kernel=k)
+                                     tf.convert_to_tensor(y, dtype=default_float())), kernel=k)
     avg_gp.likelihood.variance.assign(lik_var_init)
 
     return avg_gp
+
 
 def lvmogp_init(data_X, data_y, fun_nos, lengthscales, kernel_var, H_mean, H_var, lik_variance,
                 train_inducing, inducing_points=None, n_u=100):
@@ -257,6 +276,7 @@ def lvmogp_init(data_X, data_y, fun_nos, lengthscales, kernel_var, H_mean, H_var
 
     return lvmogp
 
+
 def train_gp(gp):
     """function to train any of the GP models using L-BFGS-B.
 
@@ -266,6 +286,7 @@ def train_gp(gp):
         """
 
     lmls = []
+
     def step_callback(step, variables, values):
         lmls.append(gp.maximum_log_likelihood_objective().numpy())
 
@@ -276,7 +297,8 @@ def train_gp(gp):
 
     return gp, lmls
 
-def get_metrics(final_models_dict, test_fun, domain, n_fun, observed_dims, n_new_funs, n_grid_points = 100):
+
+def get_metrics(final_models_dict, test_fun, domain, n_fun, observed_dims, n_new_funs, n_grid_points=100):
     """calculate the root mean squared error (RMSE) and negative log predictive density (NLPD) of each of the models
     returning a dataframe with the results in.
     :param final_models_dict: dictionary of the models
@@ -335,7 +357,9 @@ def get_metrics(final_models_dict, test_fun, domain, n_fun, observed_dims, n_new
 
     return results_df
 
-def plot_predictions(final_models_dict, test_fun, domain, n_fun, observed_dims, data_y, n_grid_points = 100):
+
+def plot_predictions(final_models_dict, test_fun, domain, n_fun, observed_dims, data_y, n_grid_points=100, save=False,
+                     path=None, file_name=None):
     """plot the predictions of each of the models
     :param final_models_dict: dictionary of the models
     :param test_fun: the test functions object
@@ -359,6 +383,8 @@ def plot_predictions(final_models_dict, test_fun, domain, n_fun, observed_dims, 
         ys_new.append(y_new)
         fs_new.append(f_new)
 
+    labels = {'mo_indi': 'MOGP', 'avg': 'AvgGP', 'lmc': 'LMC', 'lvm': 'LVMOGP'}
+
     for model_name, model in final_models_dict.items():
         x = model_x_news[model_name]
         pred_mu, pred_var = model.predict_y(x)
@@ -373,12 +399,18 @@ def plot_predictions(final_models_dict, test_fun, domain, n_fun, observed_dims, 
                                 pred_mu.numpy()[idx].flatten() + np.sqrt(pred_var.numpy()[idx].flatten()),
                                 pred_mu.numpy()[idx].flatten() - np.sqrt(pred_var.numpy()[idx].flatten()), alpha=0.2)
 
-            axs[i].plot(x_new, fs_new[i].numpy(), linestyle=':')
-            axs[i].scatter(x_new, ys_new[i].numpy(), s=5, color='blue')
+            axs[i].plot(x_new, fs_new[i].numpy(), linestyle=':', color='k')
+            axs[i].scatter(x_new, ys_new[i].numpy(), s=5, color='k', alpha=0.5)
             idx_train = np.where([test_fun.fun_no == fun_no])[1]
             axs[i].scatter(test_fun.X[idx_train], test_fun.y[idx_train])
-            axs[i].set_ylim(np.min(data_y) - 0.2, np.max(data_y) + 0.2)
-            axs[i].set_title(model_name)
+            axs[i].set_ylim(np.min(data_y) - 0.4, np.max(data_y) + 0.4)
+            axs[i].set_title(f'Function {fun_no}')
+        plt.suptitle(f'{labels[model_name]} Predictions')
+        plt.tight_layout()
+
+        if save:
+            plt.savefig(path / f'{model_name}_{file_name}', bbox_inches='tight')
+            plt.close()
 
 
 def get_gridpoints(domain, n_fun, final_models_dict, observed_dims, n_points=100):
@@ -412,16 +444,19 @@ def get_gridpoints(domain, n_fun, final_models_dict, observed_dims, n_points=100
 
     return x_new, fun_nos, x_new_lmc, x_new_lvmogp
 
+
 def get_abs_error(mu, y_true):
     abs_error = np.sqrt(np.square(y_true.ravel() - mu))
     return abs_error
+
 
 def get_nlpd(mu, sig2, y_true):
     nlpd = - (-0.5 * np.log(2 * np.pi) - 0.5 * np.log(sig2)
               - 0.5 * (np.square(y_true.ravel().reshape(len(y_true.ravel()), ) - mu)) / sig2)
     return nlpd
 
-def save_models(models_dict, lmls, data_X, data_y, fun_nos, path, file_name):
+
+def save_models(models_dict, lmls, data_X, data_y, fun_nos, x_new, y_news, f_news, path, file_name):
     """save the hyperparameters and the training log marginal likelihoods for each model. Also save the data so the
     models can be reconstructed.
     :param models_dict: dictionary of models
@@ -431,15 +466,16 @@ def save_models(models_dict, lmls, data_X, data_y, fun_nos, path, file_name):
     :param fun_nos: function numbers
     :return: dataframe of hyperparameters and lmls"""
     hyp_df = pd.DataFrame(
-        columns=['model', 'init_type', 'restart', 'lmls', 'hyperparameters', 'data_X', 'data_y', 'fun_nos'])
+        columns=['model', 'init_type', 'restart', 'lmls', 'hyperparameters', 'data_X', 'data_y', 'fun_nos', 'x_new', 'y_news', 'f_news'])
 
     for model_name, mod_dict in models_dict.items():
         for restart, model_dict in mod_dict.items():
             for init_type, model in model_dict.items():
                 hyp_df.loc[len(hyp_df)] = [model_name, init_type, restart,
                                            lmls[model_name][restart][init_type],
-                                           read_values(model), data_X, data_y, fun_nos]
+                                           read_values(model), data_X, data_y, fun_nos, x_new, y_news, f_news]
     hyp_df.to_pickle(path / file_name)
+
 
 def save_results(results_df, path, seed, n_new_points, surface_type, n_new_fun):
     """save the results dataframe to specfied location.
@@ -454,14 +490,15 @@ def save_results(results_df, path, seed, n_new_points, surface_type, n_new_fun):
     results_df['n_new_points'] = n_new_points
     results_df['surface_type'] = surface_type
     results_df['n_new_fun'] = n_new_fun
-    results_df.to_pickle(path / f'results_{surface_type}_{n_new_points}_{n_new_fun}_{seed}.pkl')
+    results_df.to_pickle(path / f'results/results_{surface_type}_{n_new_points}_{n_new_fun}_{seed}.pkl')
 
-def plot_lvmogp_latent_variables(lvmogp):
+
+def plot_lvmogp_latent_variables(lvmogp, save=False, path=None, file_name=None):
     """plot the latent variables of the LVMOGP model
     :param lvmogp: LVMOGP model
     :return: plot of latent variables"""
     from matplotlib.patches import Ellipse
-    fig = plt.figure(figsize=(4, 4))
+    fig = plt.figure(figsize=(column_width, column_width))
     axsH = plt.gca()
     colors = plt.rcParams['axes.prop_cycle'].by_key()['color'] * 3
     for i, H_coord in enumerate(lvmogp.H_data_mean.numpy()):
@@ -476,3 +513,7 @@ def plot_lvmogp_latent_variables(lvmogp):
                           , color=colors[i], alpha=0.3, zorder=0)
         axsH.add_patch(circle1)
     plt.tight_layout()
+
+    if save:
+        plt.savefig(path / file_name, bbox_inches='tight')
+        plt.close()
