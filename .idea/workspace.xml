@@ -136,7 +136,7 @@
       <updated>1684399043092</updated>
       <workItem from="1684399044258" duration="53208000" />
       <workItem from="1684848445568" duration="22349000" />
-      <workItem from="1684943132739" duration="8098000" />
+      <workItem from="1684943132739" duration="8402000" />
     </task>
     <servers />
   </component>
@@ -205,16 +205,6 @@
           <url>file://$PROJECT_DIR$/models/lvmogp.py</url>
           <line>261</line>
           <option name="timeStamp" value="77" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model_learning_curves/learning_curves.py</url>
-          <line>112</line>
-          <option name="timeStamp" value="107" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model_learning_curves/learning_curves.py</url>
-          <line>97</line>
-          <option name="timeStamp" value="116" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
