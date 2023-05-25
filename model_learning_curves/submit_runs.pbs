@@ -9,7 +9,7 @@ for SEED in {1..3}
     do for DATASEED in {1..5}
         do for RELATIONTYPE in {1..3}
             do
-                qsub -v SEED=$SEED, DATASEED=$DATASEED, RELATIONTYPE=$RELATIONTYPE model_learning_curves/subset_runs.pbs
+                qsub -v SEED=$SEED,DATASEED=$DATASEED,RELATIONTYPE=$RELATIONTYPE model_learning_curves/subset_runs.pbs
             done
         done
     done

@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e2d9556-704e-4d25-af62-883b224e8d9b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/models/mystyle.mplstyle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_learning_curves/learning_curves.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_learning_curves/learning_curves.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_learning_curves/submit_runs.pbs" beforeDir="false" afterPath="$PROJECT_DIR$/model_learning_curves/submit_runs.pbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_learning_curves/subset_runs.pbs" beforeDir="false" afterPath="$PROJECT_DIR$/model_learning_curves/subset_runs.pbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/LMC_one_kappa.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/test_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/test_functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/Comparing_LVMOGP_Prediction_Methods.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/Comparing_LVMOGP_Prediction_Methods.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/LMC_fitting_and_intialisation.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/LMC_fitting_and_intialisation.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,7 +127,7 @@
       <updated>1684399043092</updated>
       <workItem from="1684399044258" duration="53208000" />
       <workItem from="1684848445568" duration="22349000" />
-      <workItem from="1684943132739" duration="8402000" />
+      <workItem from="1684943132739" duration="9255000" />
     </task>
     <servers />
   </component>
