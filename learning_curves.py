@@ -50,7 +50,6 @@ if set_seed:
 else:
     seed = None
 
-data_seed = 1
 plot_figs = False
 train_inducing = True  # whether we train the inducing points or not
 
@@ -110,6 +109,7 @@ if plot_figs:
 
 results_df = get_metrics(final_models_dict, test_fun, domain, n_fun, observed_dims, n_new_funs, n_grid_points=100)
 
+print('got metrics')
 path = pl.Path.home() / f'Transfer_Learning_GP_Results/'
 
 x_new, _, _, _ = get_gridpoints(domain, n_fun, final_models_dict, observed_dims,
@@ -125,9 +125,9 @@ for fun in test_fun.functions:
 
 
 save_models(models_dict, lmls, data_X, data_y, fun_nos, x_new, ys_new, fs_new, path,
-            file_name=f'hyperparameters/hyperparameters_{surface_type}_{data_type_name}_{n_new_points}_points_seed_{seed}.pkl')
-
-save_results(results_df, path, seed, n_new_points, surface_type, n_new_funs)
+            file_name=f'hyperparameters/hyperparameters_{surface_type}_{data_type_name}_{n_new_points}_points_seed_{seed}_dataseed_{data_seed}.pkl')
+print('saved models')
+save_results(results_df, path, seed, n_new_points, surface_type, n_new_funs, data_seed)
 
 print('run complete')
 

@@ -1,6 +1,6 @@
 #PBS -lwalltime=24:00:00
 #PBS -lselect=1:ncpus=8:mem=30gb
-#PBS -J 1-2
+#PBS -J 1-30
 
 cd $HOME/Transfer_Learning_Gaussian_Processes
 module load anaconda3/personal

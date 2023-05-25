@@ -478,7 +478,7 @@ def save_models(models_dict, lmls, data_X, data_y, fun_nos, x_new, y_news, f_new
     hyp_df.to_pickle(path / file_name)
 
 
-def save_results(results_df, path, seed, n_new_points, surface_type, n_new_fun):
+def save_results(results_df, path, seed, n_new_points, surface_type, n_new_fun, data_seed):
     """save the results dataframe to specfied location.
     :param results_df: dataframe of results
     :param path: path to save results
@@ -491,7 +491,7 @@ def save_results(results_df, path, seed, n_new_points, surface_type, n_new_fun):
     results_df['n_new_points'] = n_new_points
     results_df['surface_type'] = surface_type
     results_df['n_new_fun'] = n_new_fun
-    results_df.to_pickle(path / f'results/results_{surface_type}_{n_new_points}_{n_new_fun}_{seed}.pkl')
+    results_df.to_pickle(path / f'results/results_{surface_type}_{n_new_points}_{n_new_fun}_{seed}_dataseed_{data_seed}.pkl')
 
 
 def plot_lvmogp_latent_variables(lvmogp, save=False, path=None, file_name=None):
