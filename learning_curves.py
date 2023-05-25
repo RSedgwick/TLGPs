@@ -93,7 +93,7 @@ if plot_figs:
     plt.close()
 
 models_dict = build_models(model_names, data_X, data_y, fun_nos, n_fun, observed_dims, latent_dims, latent_dims_lvmogp,
-                           domain, n_restarts=2)
+                           domain, n_restarts=3)
 
 models_dict, lmls = train_models(models_dict)
 
