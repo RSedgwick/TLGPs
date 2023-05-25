@@ -12,10 +12,9 @@ import tensorflow_probability as tfp
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
-
-inch_conversion = 3.93701/100
-page_width = 142.4 *inch_conversion
-column_width = 67.2* inch_conversion
+inch_conversion = 3.93701 / 100
+page_width = 142.4 * inch_conversion
+column_width = 67.2 * inch_conversion
 
 
 def build_models(models, data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, latent_dims_lvmogp, domain,
@@ -41,43 +40,43 @@ def build_models(models, data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank
                                             n_restarts=n_restarts)
             for restart, init in inits.items():
                 for init_type, init_val in init.items():
-                    # try:
-                    models_dict[model_name][restart][init_type] = lmc_init(**init_val)
-                    print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
-                # except:
-                #     print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
-                #     models_dict[model_name][restart][init_type] = None
+                    try:
+                        models_dict[model_name][restart][init_type] = lmc_init(**init_val)
+                        print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
+                    except:
+                        print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
+                        models_dict[model_name][restart][init_type] = None
         elif model_name == 'mo_indi':
             inits = get_initialisations_mo_indi(data_X, data_y, fun_nos, n_fun, observed_dims, n_restarts=n_restarts)
             for restart, init in inits.items():
                 for init_type, init_val in init.items():
-                    # try:
-                    models_dict[model_name][restart][init_type] = mo_indi_init(**init_val)
-                    print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
-                # except:
-                #     print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
-                #     models_dict[model_name][restart][init_type] = None
+                    try:
+                        models_dict[model_name][restart][init_type] = mo_indi_init(**init_val)
+                        print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
+                    except:
+                        print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
+                        models_dict[model_name][restart][init_type] = None
         elif model_name == 'avg':
             inits = get_initialisations_avg(data_X, data_y, fun_nos, observed_dims, n_restarts=n_restarts)
             for restart, init in inits.items():
                 for init_type, init_val in init.items():
-                    # try:
-                    models_dict[model_name][restart][init_type] = avg_init(**init_val)
-                    print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
-                # except:
-                #     print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
-                #     models_dict[model_name][restart][init_type] = None
+                    try:
+                        models_dict[model_name][restart][init_type] = avg_init(**init_val)
+                        print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
+                    except:
+                        print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
+                        models_dict[model_name][restart][init_type] = None
         elif model_name == 'lvmogp':
             inits = get_initialisations_lvmogp(data_X, data_y, fun_nos, n_fun, observed_dims, latent_dims_lvmogp,
                                                domain, n_restarts=n_restarts)
             for restart, init in inits.items():
                 for init_type, init_val in init.items():
-                    # try:
-                    models_dict[model_name][restart][init_type] = lvmogp_init(**init_val)
-                    print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
-                # except:
-                #     print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
-                #     models_dict[model_name][restart][init_type] = None
+                    try:
+                        models_dict[model_name][restart][init_type] = lvmogp_init(**init_val)
+                        print(f'successful build model {model_name}, restart {restart}, init_type {init_type}')
+                    except:
+                        print(f'failed to build model {model_name}, restart {restart}, init_type {init_type}')
+                        models_dict[model_name][restart][init_type] = None
         else:
             raise ValueError(f'model_name {model_name} not recognised. model_name must be in'
                              f' ["lmc", "mo_indi", "avg", "lvmogp"]')
@@ -122,8 +121,9 @@ def get_final_models_dict(models_dict):
         gps = []
         for restart, mod_dict in model_dict.items():
             for init_type, model in mod_dict.items():
-                final_lmls.append(model.maximum_log_likelihood_objective())
-                gps.append(model)
+                if model is not None:
+                    final_lmls.append(model.maximum_log_likelihood_objective())
+                    gps.append(model)
         arg_best_lml = np.argmax(final_lmls)
         final_models_dict[model_name] = gps[arg_best_lml]
 
@@ -466,7 +466,8 @@ def save_models(models_dict, lmls, data_X, data_y, fun_nos, x_new, y_news, f_new
     :param fun_nos: function numbers
     :return: dataframe of hyperparameters and lmls"""
     hyp_df = pd.DataFrame(
-        columns=['model', 'init_type', 'restart', 'lmls', 'hyperparameters', 'data_X', 'data_y', 'fun_nos', 'x_new', 'y_news', 'f_news'])
+        columns=['model', 'init_type', 'restart', 'lmls', 'hyperparameters', 'data_X', 'data_y', 'fun_nos', 'x_new',
+                 'y_news', 'f_news'])
 
     for model_name, mod_dict in models_dict.items():
         for restart, model_dict in mod_dict.items():
