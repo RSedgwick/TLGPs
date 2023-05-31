@@ -15,6 +15,8 @@ import matplotlib as mpl
 inch_conversion = 3.93701 / 100
 page_width = 142.4 * inch_conversion
 column_width = 67.2 * inch_conversion
+full_width = 7.5
+halfwidth = 3.5
 
 
 def build_models(models, data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, latent_dims_lvmogp, domain,
@@ -152,8 +154,8 @@ def plot_lmls(LMLs, save=False, path=None, file_name=None):
         plt.close()
 
 
-def lmc_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, lengthscales_X, kernel_var_init, lik_var_init,
-             W_init, kappa_init):
+def lmc_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, lengthscales_X=None, kernel_var_init=1, lik_var_init=0.1,
+             W_init=None, kappa_init=None):
     """function for initialising the LMC
 
     :param data_X: the X data
@@ -169,6 +171,13 @@ def lmc_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, lengthscal
     :param kappa_init: initialisation of kappa. If not none should be numpy array of shape [n_fun]
    """
 
+    if lengthscales_X is None:
+        lengthscales_X = np.ones(observed_dims)
+    if W_init is None:
+        W_init = np.random.uniform(-1, 1, (n_fun, lmc_rank))
+    if kappa_init is None:
+        kappa_init = np.random.uniform(0, 1, n_fun)
+
     X_lmc = np.hstack([data_X, fun_nos])
     y = data_y
     k = gpflow.kernels.RBF(lengthscales=lengthscales_X, variance=kernel_var_init, active_dims=range(observed_dims))
@@ -183,8 +192,8 @@ def lmc_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, lengthscal
     return lmc
 
 
-def mo_indi_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, lengthscales_X, kernel_var_init,
-                 lik_var_init):
+def mo_indi_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, lengthscales_X=None, kernel_var_init=1,
+                 lik_var_init=0.1):
     """function for initialising the multioutput independent Gaussian process. This method uses the LMC method but
     setting W=0 and kappa=1 and not trainable to make it behave like an independent GP, with no transfer learning
     between surfaces. This is so we can observed different points ond different functions as the GPflow MOGP model
@@ -200,6 +209,8 @@ def mo_indi_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, length
     :param lik_var_init: initial value for the likelihood variance
     :param lmc_rank: the rank of the LMC. If not specified it is taken to be the latent dims
    """
+    if lengthscales_X is None:
+        lengthscales_X = np.ones(observed_dims)
 
     W_init = np.ones((n_fun, lmc_rank)) * 1e-6  # very small rather than zero to avoid issue with transform
     kappa_init = np.ones(n_fun)
@@ -214,7 +225,7 @@ def mo_indi_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank, length
     return mo_indi
 
 
-def avg_init(data_X, data_y, fun_nos, observed_dims, lengthscales_X, kernel_var_init, lik_var_init):
+def avg_init(data_X, data_y, fun_nos, observed_dims, lengthscales_X=None, kernel_var_init=1, lik_var_init=0.1):
     """function for initialising the average GP. This is where we just fit one function to all the data, disregarding
     the fact that it came from different functions.
 
@@ -226,6 +237,8 @@ def avg_init(data_X, data_y, fun_nos, observed_dims, lengthscales_X, kernel_var_
     :param kernel_var_init: initial value for kernel variance
     :param lik_var_init: initial value for the likelihood variance
    """
+    if lengthscales_X is None:
+        lengthscales_X = np.ones(observed_dims)
 
     y = data_y
     k = gpflow.kernels.RBF(lengthscales=lengthscales_X, variance=kernel_var_init, active_dims=range(observed_dims))
@@ -236,8 +249,8 @@ def avg_init(data_X, data_y, fun_nos, observed_dims, lengthscales_X, kernel_var_
     return avg_gp
 
 
-def lvmogp_init(data_X, data_y, fun_nos, lengthscales, kernel_var, H_mean, H_var, lik_variance,
-                train_inducing, inducing_points=None, n_u=100):
+def lvmogp_init(data_X, data_y, fun_nos, lengthscales, kernel_var=1, H_mean=None, H_var=None, lik_variance=0.1,
+                train_inducing=True, inducing_points=None, n_u=100):
     """function for initialising the LMC
 
     :param data_X: the X data
@@ -252,6 +265,14 @@ def lvmogp_init(data_X, data_y, fun_nos, lengthscales, kernel_var, H_mean, H_var
     :param inducing_points: initialisation of inducing points
     :param n_u: number of inducing points
     """
+    n_fun = len(np.unique(fun_nos))
+    n_latent_dims = int(len(lengthscales) - data_X.shape[1])
+
+    if H_mean is None:
+        H_mean = tf.convert_to_tensor(np.random.uniform(-1, 1, (n_fun, n_latent_dims)), dtype=default_float())
+
+    if H_var is None:
+        H_var = tf.ones((n_fun, n_latent_dims), dtype=default_float()) * 1e-6
 
     if inducing_points is not None and n_u is not None:
         raise ValueError("Cannot specify both inducing points and number of inducing points n_u")
@@ -358,7 +379,7 @@ def get_metrics(final_models_dict, test_fun, domain, n_fun, observed_dims, n_new
     return results_df
 
 
-def plot_predictions(final_models_dict, test_fun, domain, n_fun, observed_dims, data_y, n_grid_points=100, save=False,
+def plot_predictions(final_models_dict, test_fun, domain, n_fun, observed_dims, n_grid_points=100, save=False,
                      path=None, file_name=None):
     """plot the predictions of each of the models
     :param final_models_dict: dictionary of the models
@@ -366,11 +387,10 @@ def plot_predictions(final_models_dict, test_fun, domain, n_fun, observed_dims, 
     :param domain: domain of the data
     :param n_fun: the total number of functions
     :param observed_dims: the dimensions of the observed space
-    :param data_y: the data values
     :param n_grid_points: the number of grid points to use for the RMSE and NLPD"""
 
     x_new, fun_nos, x_new_lmc, x_new_lvmogp = get_gridpoints(domain, n_fun, final_models_dict, observed_dims,
-                                                             n_points=100)
+                                                             n_points=n_grid_points)
 
     model_x_news = {'avg': x_new, 'mo_indi': x_new_lmc, 'lmc': x_new_lmc, 'lvmogp': x_new_lvmogp}
 
@@ -388,23 +408,17 @@ def plot_predictions(final_models_dict, test_fun, domain, n_fun, observed_dims, 
     for model_name, model in final_models_dict.items():
         x = model_x_news[model_name]
         pred_mu, pred_var = model.predict_y(x)
-        fig, axs = plt.subplots(nrows=1, ncols=n_fun, figsize=(20, 3))
-        for i, fun_no in enumerate(range(n_fun)):
-            if model_name == 'avg':
-                idx = range(len(x_new))
-            else:
-                idx = range(n_grid_points * i, n_grid_points * (i + 1))
-            axs[i].plot(x_new, pred_mu.numpy()[idx].flatten())
-            axs[i].fill_between(x_new.flatten(),
-                                pred_mu.numpy()[idx].flatten() + np.sqrt(pred_var.numpy()[idx].flatten()),
-                                pred_mu.numpy()[idx].flatten() - np.sqrt(pred_var.numpy()[idx].flatten()), alpha=0.2)
+        fig, axs = plt.subplots(nrows=1, ncols=1, figsize=(full_width, full_width))
 
-            axs[i].plot(x_new, fs_new[i].numpy(), linestyle=':', color='k')
-            axs[i].scatter(x_new, ys_new[i].numpy(), s=5, color='k', alpha=0.5)
-            idx_train = np.where([test_fun.fun_no == fun_no])[1]
-            axs[i].scatter(test_fun.X[idx_train], test_fun.y[idx_train])
-            axs[i].set_ylim(np.min(data_y) - 0.4, np.max(data_y) + 0.4)
-            axs[i].set_title(f'Function {fun_no}')
+        for ax in axs:
+            ax.remove()
+
+        gridspec = axs[0].get_subplotspec().get_gridspec()
+        subfigs = [fig.add_subfigure(gs) for gs in gridspec]
+
+        plot_model_predictions(model_name, n_fun, test_fun.X, test_fun.y, test_fun.fun_no, x_new, pred_mu, pred_var,
+                               fs_new, ys_new, subfigs[0])
+
         plt.suptitle(f'{labels[model_name]} Predictions')
         plt.tight_layout()
 
@@ -412,12 +426,49 @@ def plot_predictions(final_models_dict, test_fun, domain, n_fun, observed_dims, 
             plt.savefig(path / f'{model_name}_{file_name}', bbox_inches='tight')
             plt.close()
 
+def plot_model_predictions(model_name, n_fun, data_X, data_y, fun_nos, x_new, pred_mu, pred_var, fs_new, ys_new, subfig):
+    """plot predictions of a given model for each function
+    :param model_name: the name of the model
+    :param n_fun: the total number of functions
+    :param data_X: the data inputs
+    :param data_y: the data values
+    :param fun_nos: the function numbers
+    :param x_new: the new inputs
+    :param pred_mu: the predicted mean
+    :param pred_var: the predicted variance
+    :param fs_new: the true function values
+    :param ys_new: the true data values
+    :param axs: the axes to plot on
+    """
 
-def get_gridpoints(domain, n_fun, final_models_dict, observed_dims, n_points=100):
+    axs = subfig.subplots(nrows=1, ncols=n_fun)
+
+    for i, fun_no in enumerate(range(n_fun)):
+        if model_name == 'avg':
+            idx = range(len(x_new))
+        else:
+            idx = range(len(x_new) * i, len(x_new) * (i + 1))
+        axs[i].plot(x_new, pred_mu.numpy()[idx].flatten())
+        axs[i].fill_between(x_new.flatten(),
+                            pred_mu.numpy()[idx].flatten() + np.sqrt(pred_var.numpy()[idx].flatten()),
+                            pred_mu.numpy()[idx].flatten() - np.sqrt(pred_var.numpy()[idx].flatten()), alpha=0.2)
+
+        axs[i].plot(x_new, fs_new[i].numpy(), linestyle=':', color='k')
+        if ys_new is not None:
+            axs[i].scatter(x_new, ys_new[i].numpy(), s=5, color='k', alpha=0.5)
+        idx_train = np.where([fun_nos == fun_no])[1]
+        axs[i].scatter(data_X[idx_train], data_y[idx_train])
+        axs[i].set_ylim(np.min(data_y) - 0.5, np.max(data_y) + 0.5)
+        axs[i].set_title(f'Function {fun_no}')
+    return subfig
+
+
+
+def get_gridpoints(domain, n_fun, final_models_dict, observed_dims, x_new=None, n_points=100):
     """return grid points across domain on each function, formatted in the different ways the models need"""
 
-    n_points = 100
-    x_new = np.linspace(domain[0], domain[1], n_points).reshape(n_points, 1)
+    if x_new is None:
+        x_new = np.linspace(domain[0], domain[1], n_points).reshape(n_points, 1)
     fun_nos = np.hstack([[fun_no] * n_points for fun_no in range(n_fun)]).reshape(n_points * n_fun, observed_dims)
     test = np.tile(x_new.flatten(), n_fun)
     x_new_lmc = np.hstack([np.tile(x_new.flatten(), n_fun).reshape(n_points * n_fun, observed_dims), fun_nos])
