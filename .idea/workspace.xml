@@ -2,9 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e2d9556-704e-4d25-af62-883b224e8d9b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/analysis_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/learning_curves.py" beforeDir="false" afterPath="$PROJECT_DIR$/learning_curves.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_learning_curves/Plot_Predictions.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/model_learning_curves/Plot_Predictions.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_learning_curves/animating_plots_best_elbos.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/model_learning_curves/animating_plots.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_learning_curves/model_comparisons.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/model_learning_curves/model_comparisons.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_learning_curves/plot_predictions.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_learning_curves/plot_predictions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_learning_curves/plotting_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_learning_curves/plotting_utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/notebooks/Comparing_LVMOGP_Prediction_Methods.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/Comparing_LVMOGP_Prediction_Methods.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/LMC_fitting_and_intialisation.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/LMC_fitting_and_intialisation.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/lmc_setting_W_and_kappa.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/lmc_setting_W_and_kappa.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plotting_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/plotting_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +73,8 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/utils" />
+      <recent name="$PROJECT_DIR$/" />
       <recent name="$PROJECT_DIR$/model_learning_curves" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/code" />
@@ -127,7 +138,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils/utils.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -160,6 +171,7 @@
       <workItem from="1685523648094" duration="779000" />
       <workItem from="1685524567510" duration="10360000" />
       <workItem from="1685538864164" duration="10410000" />
+      <workItem from="1685621718507" duration="1965000" />
     </task>
     <servers />
   </component>
@@ -251,16 +263,16 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model_learning_curves/plot_predictions.py</url>
-          <line>32</line>
+          <line>33</line>
           <option name="timeStamp" value="126" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/models/utils.py</url>
+          <url>file://$PROJECT_DIR$/utils/utils.py</url>
           <line>270</line>
           <option name="timeStamp" value="137" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/models/utils.py</url>
+          <url>file://$PROJECT_DIR$/utils/utils.py</url>
           <line>276</line>
           <option name="timeStamp" value="138" />
         </line-breakpoint>
@@ -270,8 +282,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model_learning_curves/plot_predictions.py</url>
-          <line>23</line>
-          <option name="timeStamp" value="177" />
+          <line>25</line>
+          <option name="timeStamp" value="180" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -284,7 +296,7 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Transfer_Learning_Gaussian_Processes$plot_predictions.coverage" NAME="plot_predictions Coverage Results" MODIFIED="1685549367434" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model_learning_curves" />
+    <SUITE FILE_PATH="coverage/Transfer_Learning_Gaussian_Processes$plot_predictions.coverage" NAME="plot_predictions Coverage Results" MODIFIED="1685623634215" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model_learning_curves" />
     <SUITE FILE_PATH="coverage/Transfer_Learning_Gaussian_Processes$utils.coverage" NAME="utils Coverage Results" MODIFIED="1685003435888" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
     <SUITE FILE_PATH="coverage/Transfer_Learning_Gaussian_Processes$learning_curves.coverage" NAME="learning_curves Coverage Results" MODIFIED="1685006598685" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model_learning_curves" />
   </component>

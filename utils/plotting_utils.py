@@ -1,11 +1,9 @@
 import numpy as np
-
-from utils import get_gridpoints, full_width, column_width
+from utils.utils import get_gridpoints, full_width, column_width
 import matplotlib.pyplot as plt
 
 full_width = 7.5
 halfwidth = 3.5
-
 
 def unpack_series(best_row):
     """Unpack the Series object into the relevant variables"""
@@ -53,7 +51,7 @@ def plot_all_models_from_hyperparameters(model_dict, hyperparams, plot_new_ys=Tr
     mod_names = {'mo_indi': 'MOGP', 'lmc': 'LMC', 'avg': 'AvgGP', 'lvmogp': 'LVMOGP'}
 
     fig, axs = plt.subplots(nrows=len(model_dict), ncols=1, figsize=(25, 12))
-
+    fig.subplots_adjust(bottom=0.2, top=0.8, hspace=1)
     for ax in axs:
         ax.remove()
 
@@ -68,9 +66,9 @@ def plot_all_models_from_hyperparameters(model_dict, hyperparams, plot_new_ys=Tr
         subfig.suptitle(f'{mod_names[model_name]}')
         subfig = plot_model_from_hyperparameters(model, mod_df, subfig, plot_new_ys=plot_new_ys)
         row += 1
+        subfig.subplots_adjust(wspace=0.3)
     if save_fig:
-        plt.savefig(save_path)
-
+        plt.savefig(save_path, dpi=500)
     return fig
 
 def plot_learning_curve_results(results_df, seeds, mean=False):
@@ -117,6 +115,7 @@ def plot_learning_curve_results(results_df, seeds, mean=False):
         axs[1, i].set_ylim(-2.5, 10)
         axs[0, i].set_ylim(0, 1)
     axs[1, 1].set_xlabel('number of points on new functions')
+    plt.subplots_adjust(wspace=0.3)
     axs[1, 1].legend(bbox_to_anchor=(0.5, -0.65), loc='lower center', ncol=4)
 
 def get_colors():

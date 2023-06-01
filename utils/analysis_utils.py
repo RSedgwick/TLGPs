@@ -1,13 +1,11 @@
 import pathlib as pl
 import os
 import pickle
-
 import gpflow
 import numpy as np
 import pandas as pd
-
-from plotting_utils import unpack_series
-from utils import mo_indi_init, lmc_init, avg_init, lvmogp_init
+from utils.plotting_utils import unpack_series
+from utils.utils import mo_indi_init, lmc_init, avg_init, lvmogp_init
 
 
 def load_learning_curve_results():

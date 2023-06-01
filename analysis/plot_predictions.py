@@ -4,8 +4,8 @@ import os
 import warnings
 import matplotlib.pyplot as plt
 warnings.simplefilter("ignore")
-from plotting_utils import plot_all_models_from_hyperparameters
-from analysis_utils import load_hyperparameters, fit_model_from_hyperparameters
+from utils.plotting_utils import plot_all_models_from_hyperparameters
+from utils.analysis_utils import load_hyperparameters, fit_model_from_hyperparameters
 
 full_width = 7.5
 halfwidth = 3.5
@@ -14,7 +14,7 @@ surface_type = 'linear_relation'
 test_type = 'two_observed_10_new'
 n_new_points = 1
 
-plot_path = pl.Path(os.getcwd())/'plots'
+plot_path = pl.Path().home()/'TLGP_plots'
 
 for surface_type in ['unrelated', 'linear_relation', 'non-linear_relation']:
        for n_new_points in range(2, 30):
@@ -30,7 +30,7 @@ for surface_type in ['unrelated', 'linear_relation', 'non-linear_relation']:
                                           print(model_name)
                                           mod_df = hyperparams[hyperparams['model'] == model_name]
                                           gps[model_name] = fit_model_from_hyperparameters(mod_df)
-                                   save_path = plot_path / f'predictions_{surface_type}_{test_type}_{n_new_points}_points_seed_{seed}_dataseed_{dataseed}.svg'
+                                   save_path = plot_path / f'predictions_{surface_type}_{test_type}_{n_new_points}_points_seed_{seed}_dataseed_{dataseed}.png'
                                    plot_all_models_from_hyperparameters(gps, hyperparams, plot_new_ys=False,
                                                                         save_fig=True, save_path=save_path)
                                    plt.close()
