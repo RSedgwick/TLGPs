@@ -1,12 +1,18 @@
 import numpy as np
 from utils.utils import get_gridpoints, full_width, column_width
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+mpl.style.use('/home/ruby/Transfer_Learning_Gaussian_Processes/utils/mystyle.mplstyle')
+
 
 full_width = 7.5
 halfwidth = 3.5
 
 def unpack_series(best_row):
-    """Unpack the Series object into the relevant variables"""
+    """Unpack the Series object into the relevant variables
+    :param best_row: pandas Series object containing the hyperparameters and data
+    :return: data_X, data_y, fun_nos, observed_dims, x_new, fs_new, ys_new, n_grid_points, hyp, n_fun"""
     data_X = best_row['data_X']
     data_y = best_row['data_y']
     fun_nos = best_row['fun_nos']
@@ -21,7 +27,11 @@ def unpack_series(best_row):
 
 def plot_model_from_hyperparameters(model, mod_df, subfig, plot_new_ys=True):
     """Plot the model from the hyperparameters and data in the Series object
-    :param model_series: pandas Series object containing the hyperparameters and data"""
+    :param model: GPflow model object
+    :param mod_df: pandas Series object containing the hyperparameters and data
+    :param subfig: matplotlib subfigure object
+    :return: subfig
+    """
 
 
     best_row = mod_df[mod_df['final_lml'] == np.max(mod_df['final_lml'])].iloc[0]
@@ -45,7 +55,10 @@ def plot_model_from_hyperparameters(model, mod_df, subfig, plot_new_ys=True):
     return subfig
 
 def plot_all_models_from_hyperparameters(model_dict, hyperparams, plot_new_ys=True, save_fig=False, save_path=None):
-    """Plot all the models from the hyperparameters in the dictionary"""
+    """Plot all the models from the hyperparameters in the dictionary
+    :param model_dict: dictionary of GPflow model objects
+    :param hyperparams: pandas dataframe containing the hyperparameters and data
+    :return: figure"""
 
     n_fun = len(np.unique(hyperparams['fun_nos'][0]))
     mod_names = {'mo_indi': 'MOGP', 'lmc': 'LMC', 'avg': 'AvgGP', 'lvmogp': 'LVMOGP'}
@@ -68,11 +81,15 @@ def plot_all_models_from_hyperparameters(model_dict, hyperparams, plot_new_ys=Tr
         row += 1
         subfig.subplots_adjust(wspace=0.3)
     if save_fig:
-        plt.savefig(save_path, dpi=500)
+        plt.savefig(f'{save_path}.svg', bbox_inches='tight')
+        plt.savefig(f'{save_path}.png', dpi=500, bbox_inches='tight')
     return fig
 
-def plot_learning_curve_results(results_df, seeds, mean=False):
-    """Plot the RMSE and the NLPD against iteration from the results dataframe"""
+def plot_learning_curve_results(results_df, seeds, mean=False, save=False, path=None, file_name=None):
+    """Plot the RMSE and the NLPD against iteration from the results dataframe
+    :param results_df: pandas dataframe containing the results
+    :param seeds: list of seeds
+    :param mean: boolean, if True, plot the mean and standard deviation of the results"""
     model_names = ['mo_indi', 'avg', 'lmc', 'lvmogp', ]
     colors = get_colors()
 
@@ -118,14 +135,22 @@ def plot_learning_curve_results(results_df, seeds, mean=False):
     plt.subplots_adjust(wspace=0.3)
     axs[1, 1].legend(bbox_to_anchor=(0.5, -0.65), loc='lower center', ncol=4)
 
+    if save:
+        plt.savefig(path / f'{file_name}.svg', bbox_inches='tight')
+        plt.savefig(path / f'{file_name}.png', dpi=500, bbox_inches='tight')
+
+
 def get_colors():
     """Get the colors for the different models so they are the same in all plots"""
     cols = plt.rcParams['axes.prop_cycle'].by_key()['color']
     colors = {'lmc': cols[0], 'mo_indi': cols[3], 'lvmogp': cols[1], 'avg': cols[2]}
     return colors
 
-def plot_log_marginal_likelihoods_of_restarts(hyp_df, seed, data_seed):
-    """Plot the log marginal likelihoods of the different restarts of the hyperparameters"""
+def plot_log_marginal_likelihoods_of_restarts(hyp_df, seed, data_seed, save=False, path=None, file_name=None):
+    """Plot the log marginal likelihoods of the different restarts of the hyperparameters
+    :param hyp_df: pandas dataframe containing the hyperparameters and data
+    :param seed: seed of the experiment
+    :param data_seed: seed of the data"""
 
     surface_type_names = {'unrelated': 'Uncorrelated',
                           'linear_relation': 'Linearly\nCorrelated',
@@ -147,7 +172,7 @@ def plot_log_marginal_likelihoods_of_restarts(hyp_df, seed, data_seed):
 
     colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
     for model_name in ['mo_indi', 'avg', 'lmc', 'lvmogp']:
-        fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(17, 6.2))
+        fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(full_width, halfwidth))
         ax = axs.flatten()
         for k, surface_type in enumerate(surface_types):
             hyp_df_model = hyp_df[
@@ -165,11 +190,16 @@ def plot_log_marginal_likelihoods_of_restarts(hyp_df, seed, data_seed):
             if model_name == 'lvmogp':
                 ax[k].set_ylim(-150, 500)
         plt.suptitle(mod_names[model_name])
+        plt.subplots(hspace=0.8)
         plt.legend()
-        plt.show()
+        if save:
+            plt.savefig(path / f'{file_name}_seed_{seed}_dataseed_{data_seed}_{model_name}.svg', bbox_inches='tight')
+            plt.savefig(path / f'{file_name}_seed_{seed}_dataseed_{data_seed}_{model_name}.png', dpi=500, bbox_inches='tight')
 
 
 def plot_lmls(LMLs, save=False, path=None, file_name=None):
+    """plot the log marginal likelihoods from the training process
+    :param LMLs: dictionary containing the log marginal likelihoods for each model"""
     fig, axs = plt.subplots(ncols=len(LMLs), figsize=(20, 5))
     i = 0
     labels = {'mo_indi': 'MOGP', 'avg': 'AvgGP', 'lmc': 'LMC', 'lvm': 'LVMOGP'}
@@ -188,7 +218,6 @@ def plot_lmls(LMLs, save=False, path=None, file_name=None):
     plt.tight_layout()
     if save:
         plt.savefig(path / file_name, bbox_inches='tight')
-        plt.close()
 
 
 def plot_predictions(final_models_dict, test_fun, domain, n_fun, observed_dims, n_grid_points=100, save=False,
@@ -235,8 +264,9 @@ def plot_predictions(final_models_dict, test_fun, domain, n_fun, observed_dims, 
         plt.tight_layout()
 
         if save:
-            plt.savefig(path / f'{model_name}_{file_name}', bbox_inches='tight')
-            plt.close()
+            plt.savefig(path / f'{model_name}_{file_name}.svg', bbox_inches='tight')
+            plt.savefig(path / f'{model_name}_{file_name}.png', dpi=500, bbox_inches='tight')
+
 
 
 def plot_model_predictions(model_name, n_fun, data_X, data_y, fun_nos, x_new, pred_mu, pred_var, fs_new, ys_new, subfig):
@@ -298,5 +328,6 @@ def plot_lvmogp_latent_variables(lvmogp, save=False, path=None, file_name=None):
     plt.tight_layout()
 
     if save:
-        plt.savefig(path / file_name, bbox_inches='tight')
+        plt.savefig(path / f'{file_name}.svg', bbox_inches='tight')
+        plt.savefig(path / f'{file_name}.png', dpi=500, bbox_inches='tight')
         plt.close()

@@ -5,7 +5,7 @@ Comparison of different transfer learning Gaussian process methods on synthetic 
 
 To clone this repo use the command:
     
-     git clone https://github.com/RSedgwick/RS021_TransferLearning_GP.git 
+     git clone https://github.com/RSedgwick/Transfer_Learning_Gaussian_Processes.git
 
 The code is written in Python 3.6. To install the required packages, ensure conda is installed and run the following 
 command in the root directory of the project:
@@ -59,5 +59,12 @@ Below is an overview of the code
   - `Comparing_LVMOGP_Prediction_Methods.ipynb` - Notebook for comparing different methods for prediction using the LVMOGP
   - `LMC_fitting_and_intialisation.ipynb` - Notebook demonstrating the fitting of the LMC
   - `lmc_setting_W_and_kappa.ipynb` - Notebook demonstrating how the LMC can recreate the independent MOGP
+- `analysis`
+  - `plots` - various plots that have been generated
+  - `model_comparison.ipynb` - Notebook comparing the RMSE and NLPD of the different models from the many learning curve runs
+  - `plot_predictions.ipynb` - plot the predictions of the models for a given seed, data seed and number of training points. 
+Also plot the log marginal likelihood of the different initialisations at each number of training points for all models. 
+  - `plot_predictions.py` - plot the predictions for all runs, to be made into gifs
+  - `animating_plots.ipynb` - notebook for making gifs out of predictions
 - `learning_curves.py` - this script is used for fitting each of the models, analysing the results and saving them to a file
   - The `.pbs` scripts can be used to run this many times for different seeds and number of training points on a cluster

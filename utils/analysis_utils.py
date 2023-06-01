@@ -10,7 +10,6 @@ from utils.utils import mo_indi_init, lmc_init, avg_init, lvmogp_init
 
 def load_learning_curve_results():
     """Load the results of the learning curves for all the different models and return it as a dataframe
-    :return:
     """
     path = pl.Path.home() / 'Transfer_Learning_GP_Results'
     n_new_fun = 10
@@ -36,7 +35,6 @@ def load_learning_curve_results():
 
 def load_all_hyperparameters():
     """Load the results of the learning curves for all the different models and return it as a dataframe
-    :return:
     """
 
     path = pl.Path.home() / 'Transfer_Learning_GP_Results/hyperparameters'
