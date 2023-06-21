@@ -2,12 +2,16 @@ import numpy as np
 from utils.utils import get_gridpoints, full_width, column_width
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
+import pathlib as pl
 
 mpl.style.use('/home/ruby/Transfer_Learning_Gaussian_Processes/utils/mystyle.mplstyle')
 
+inch_conversion = 1/25.4
+full_width = 5.5984252
+page_height = 7.85
+halfwidth = 2.645669
 
-full_width = 7.5
-halfwidth = 3.5
 
 def unpack_series(best_row):
     """Unpack the Series object into the relevant variables
@@ -32,8 +36,6 @@ def plot_model_from_hyperparameters(model, mod_df, subfig, plot_new_ys=True):
     :param subfig: matplotlib subfigure object
     :return: subfig
     """
-
-
     best_row = mod_df[mod_df['final_lml'] == np.max(mod_df['final_lml'])].iloc[0]
     model_name = best_row['model']
     data_X, data_y, fun_nos, observed_dims, x_new, fs_new, ys_new, n_grid_points, hyp, n_fun = unpack_series(best_row)
@@ -50,9 +52,9 @@ def plot_model_from_hyperparameters(model, mod_df, subfig, plot_new_ys=True):
     if not plot_new_ys:
         ys_new = None
 
-    subfig = plot_model_predictions(model_name, n_fun, data_X, data_y, fun_nos, x_new, pred_mu, pred_var, fs_new, ys_new,
+    subfig, axs = plot_model_predictions(model_name, n_fun, data_X, data_y, fun_nos, x_new, pred_mu, pred_var, fs_new, ys_new,
                                  subfig)
-    return subfig
+    return subfig, axs
 
 def plot_all_models_from_hyperparameters(model_dict, hyperparams, plot_new_ys=True, save_fig=False, save_path=None):
     """Plot all the models from the hyperparameters in the dictionary
@@ -63,29 +65,59 @@ def plot_all_models_from_hyperparameters(model_dict, hyperparams, plot_new_ys=Tr
     n_fun = len(np.unique(hyperparams['fun_nos'][0]))
     mod_names = {'mo_indi': 'MOGP', 'lmc': 'LMC', 'avg': 'AvgGP', 'lvmogp': 'LVMOGP'}
 
-    fig, axs = plt.subplots(nrows=len(model_dict), ncols=1, figsize=(25, 12))
-    fig.subplots_adjust(bottom=0.2, top=0.8, hspace=1)
+    fig, axs = plt.subplots(nrows=len(model_dict), ncols=1, figsize=(266 * inch_conversion, 140 * inch_conversion),
+                            sharex=True, sharey=True)
+    fig.subplots_adjust(hspace=0.05)
+    plot_new_ys = False
+
     for ax in axs:
         ax.remove()
 
     gridspec = axs[0].get_subplotspec().get_gridspec()
     subfigs = [fig.add_subfigure(gs) for gs in gridspec]
 
-    row=0
+    row = 0
     for model_name, model in model_dict.items():
         mod_df = hyperparams[hyperparams['model'] == model_name]
 
         subfig = subfigs[row]
-        subfig.suptitle(f'{mod_names[model_name]}')
-        subfig = plot_model_from_hyperparameters(model, mod_df, subfig, plot_new_ys=plot_new_ys)
+        subfig, axs = plot_model_from_hyperparameters(model, mod_df, subfig, plot_new_ys=plot_new_ys)
+        for ax in axs:
+            #
+            # ax.set_xticks([0, 1, 2])
+            ax.xaxis.set_ticklabels([])
+            ax.xaxis.set_major_locator(MultipleLocator(1))
+
+            # For the minor ticks, use no labels; default NullFormatter.
+            ax.xaxis.set_minor_locator(AutoMinorLocator())
+            ax.yaxis.set_minor_locator(AutoMinorLocator())
+            ax.grid(None)
+
+        axs[0].set_ylabel('y', labelpad=0, rotation=0)
+
+        labels = {'mo_indi': 'MOGP', 'avg': 'AvgGP', 'lmc': 'LMC', 'lvmogp': 'LVMOGP'}
+        axs[0].text(-1.7, 0, f'{labels[model_name]}', fontsize=8, ha="center", va="center", rotation=90)
+
+        for ax in axs[1:]:
+            ax.yaxis.set_ticklabels([])
+
+            if row == 3:
+                for ax in axs:
+                    ax.set_xticks([0, 1, 2])
+                    ax.xaxis.set_major_formatter('{x:.0f}')
         row += 1
-        subfig.subplots_adjust(wspace=0.3)
+
+        subfig.subplots_adjust(wspace=0.1)
+
+    fig.subplots_adjust(hspace=0, bottom=0)
+    subfigs[3].text(0.51, -0.15, f'x', fontsize=8, ha="center", va="center", rotation=0)
+
     if save_fig:
         plt.savefig(f'{save_path}.svg', bbox_inches='tight')
         plt.savefig(f'{save_path}.png', dpi=500, bbox_inches='tight')
     return fig
 
-def plot_learning_curve_results(results_df, seeds, mean=False, save=False, path=None, file_name=None):
+def plot_learning_curve_results(results_df, seeds, mean=False, save=False, path=None, file_name=None, potrait_orientation=False):
     """Plot the RMSE and the NLPD against iteration from the results dataframe
     :param results_df: pandas dataframe containing the results
     :param seeds: list of seeds
@@ -93,27 +125,35 @@ def plot_learning_curve_results(results_df, seeds, mean=False, save=False, path=
     model_names = ['mo_indi', 'avg', 'lmc', 'lvmogp', ]
     colors = get_colors()
 
-    surface_type_names = {'unrelated': 'Uncorrelated',
-                          'linear_relation': 'Linearly\nCorrelated',
-                          'non-linear_relation': 'Non-Linearly\nCorrelated'}
+    surface_type_names = {'unrelated': 'uncorrelated',
+                          'linear_relation': 'linearly\ncorrelated',
+                          'non-linear_relation': 'non-linearly\ncorrelated'}
 
     mod_names = {'mo_indi': 'MOGP', 'lmc': 'LMC', 'avg': 'AvgGP', 'lvmogp': 'LVMOGP'}
     metric_names = {'rmse_new_surface': 'RMSE', 'nlpd_new_surface': 'NLPD'}
 
-    cm = 1 / 2.54
-    fig, axs = plt.subplots(nrows=2, ncols=3, figsize=(17 * cm, 4))
+    if potrait_orientation:
+        fig, axs = plt.subplots(nrows=3, ncols=2, figsize=(85 * inch_conversion, 114 * inch_conversion))
+    else:
+        fig, axs = plt.subplots(nrows=2, ncols=3, figsize=(170 * inch_conversion, 4))
+
     surface_types = ['unrelated', 'linear_relation', 'non-linear_relation']
 
     for i, surface_type in enumerate(surface_types):
         for j, metric in enumerate(['rmse_new_surface', 'nlpd_new_surface']):
+            if potrait_orientation:
+                ax = axs[:, j]
+            else:
+                ax = axs[j, :]
             for k, model_name in enumerate(model_names):
+                ax[i].set_xlim(0, 30)
                 if mean:
                     temp_df_ = results_df[(results_df['surface_type'] == surface_type)
                                           & (results_df['model'] == model_name) & (results_df['seed'].isin(seeds))]
                     temp_df = temp_df_.groupby('n_new_points').mean().reset_index()
                     label = mod_names[model_name]
-                    axs[j, i].plot(temp_df['n_new_points'], temp_df[metric], alpha=0.8, color=colors[model_name],
-                                   linewidth=1, label=label)
+                    ax[i].plot(temp_df['n_new_points'], temp_df[metric], alpha=0.8, color=colors[model_name],
+                               linewidth=2, label=label)
 
                 else:
                     for data_seed in results_df['data_seed'].unique():
@@ -124,16 +164,28 @@ def plot_learning_curve_results(results_df, seeds, mean=False, save=False, path=
                             label = mod_names[model_name]
                         else:
                             label = None
-                        axs[j, i].plot(temp_df['n_new_points'], temp_df[metric], alpha=0.8, color=colors[model_name],
-                                       linewidth=1, label=label)
+                        ax[i].plot(temp_df['n_new_points'], temp_df[metric], alpha=0.8, color=colors[model_name],
+                                   linewidth=1, label=label)
+            if potrait_orientation:
+                ax[0].set_title(metric_names[metric])
+            else:
+                axs[j, 0].set_ylabel(metric_names[metric])
+        if potrait_orientation:
+            axs[i, 0].set_ylabel(surface_type_names[surface_type])
+            axs[i, 1].set_ylim(-2.5, 10)
+            axs[i, 0].set_ylim(0, 1)
+        else:
+            axs[0, i].set_title(surface_type_names[surface_type])
+            axs[1, i].set_ylim(-2.5, 10)
+            axs[0, i].set_ylim(0, 1)
 
-            axs[j, 0].set_ylabel(metric_names[metric])
-        axs[0, i].set_title(surface_type_names[surface_type])
-        axs[1, i].set_ylim(-2.5, 10)
-        axs[0, i].set_ylim(0, 1)
-    axs[1, 1].set_xlabel('number of points on new functions')
-    plt.subplots_adjust(wspace=0.3)
-    axs[1, 1].legend(bbox_to_anchor=(0.5, -0.65), loc='lower center', ncol=4)
+    plt.subplots_adjust(wspace=0.3, bottom=0.08)
+    fig.supxlabel('number of points on new functions', fontsize=8)
+    if potrait_orientation:
+        axs[2,1].legend(bbox_to_anchor=(-0.35, -0.58), loc='lower center', ncol=4, fontsize=8)
+        file_name = f'{file_name}_potrait'
+    else:
+        axs[1, 1].legend(bbox_to_anchor=(0.5, -0.5), loc='lower center', ncol=4)
 
     if save:
         plt.savefig(path / f'{file_name}.svg', bbox_inches='tight')
@@ -190,8 +242,8 @@ def plot_log_marginal_likelihoods_of_restarts(hyp_df, seed, data_seed, save=Fals
             if model_name == 'lvmogp':
                 ax[k].set_ylim(-150, 500)
         plt.suptitle(mod_names[model_name])
-        plt.subplots(hspace=0.8)
-        plt.legend()
+        # plt.subplots(hspace=0.8)
+        axs[1, 1].legend(bbox_to_anchor=(0.5, -0.5), loc='lower center', ncol=len(hyp_df_model['init_type'].unique()))
         if save:
             plt.savefig(path / f'{file_name}_seed_{seed}_dataseed_{data_seed}_{model_name}.svg', bbox_inches='tight')
             plt.savefig(path / f'{file_name}_seed_{seed}_dataseed_{data_seed}_{model_name}.png', dpi=500, bbox_inches='tight')
@@ -249,7 +301,7 @@ def plot_predictions(final_models_dict, test_fun, domain, n_fun, observed_dims, 
     for model_name, model in final_models_dict.items():
         x = model_x_news[model_name]
         pred_mu, pred_var = model.predict_y(x)
-        fig, axs = plt.subplots(nrows=1, ncols=1, figsize=(full_width, full_width))
+        fig, axs = plt.subplots(nrows=1, ncols=1, figsize=(full_width, page_height))
 
         for ax in axs:
             ax.remove()
@@ -261,6 +313,9 @@ def plot_predictions(final_models_dict, test_fun, domain, n_fun, observed_dims, 
                                fs_new, ys_new, subfigs[0])
 
         plt.suptitle(f'{labels[model_name]} Predictions')
+
+        fig.set_figwidth(full_width)
+        fig.set_figheight(page_height)
         plt.tight_layout()
 
         if save:
@@ -291,19 +346,92 @@ def plot_model_predictions(model_name, n_fun, data_X, data_y, fun_nos, x_new, pr
             idx = range(len(x_new))
         else:
             idx = range(len(x_new) * i, len(x_new) * (i + 1))
-        axs[i].plot(x_new, pred_mu.numpy()[idx].flatten())
+        axs[i].plot(x_new, pred_mu.numpy()[idx].flatten(), linewidth=2)
         axs[i].fill_between(x_new.flatten(),
                             pred_mu.numpy()[idx].flatten() + np.sqrt(pred_var.numpy()[idx].flatten()),
                             pred_mu.numpy()[idx].flatten() - np.sqrt(pred_var.numpy()[idx].flatten()), alpha=0.2)
 
-        axs[i].plot(x_new, fs_new[i].numpy(), linestyle=':', color='k')
+        axs[i].plot(x_new, fs_new[i].numpy(), linestyle=':', color='k', linewidth=1, zorder=4, alpha=0.3)
         if ys_new is not None:
             axs[i].scatter(x_new, ys_new[i].numpy(), s=5, color='k', alpha=0.5)
         idx_train = np.where([fun_nos == fun_no])[1]
-        axs[i].scatter(data_X[idx_train], data_y[idx_train])
+        axs[i].scatter(data_X[idx_train], data_y[idx_train], s=20, zorder=5, alpha=0.8)
         axs[i].set_ylim(np.min(data_y) - 0.5, np.max(data_y) + 0.5)
-        axs[i].set_title(f'Function {fun_no}')
-    return subfig
+
+        if model_name == 'mo_indi':
+            axs[i].set_title(f'{fun_no}')
+
+
+    return subfig, axs
+
+def plot_data(hyperparams, surface_type, test_type, dataseed, seed, plot_data_points=True, save=False, save_path=None, file_name=None):
+    """Make plot of the synthetic data and the functions it is drawn from
+    :param hyperparams: the hyperparameters
+    :param surface_type: the type of surface
+    :param test_type: the type of test
+    :param dataseed: the seed for the data
+    :param seed: the seed for the experiment
+    :param plot_data_points: whether to plot the data points
+    :param save: whether to save the plot
+    :param save_path: the path to save the plot to
+    :param file_name: the name of the file to save
+    """
+
+    fun_nos = hyperparams['fun_nos'][0]
+    n_fun = len(np.unique(fun_nos))
+    x_new = hyperparams['x_new'][0]
+    fs_new = hyperparams['f_news'][0]
+    data_X = hyperparams['data_X'][0]
+    data_y = hyperparams['data_y'][0]
+
+    inch_conversion = 1 / 25.4
+
+    surface_type_names = {'unrelated': 'Uncorrelated',
+                          'linear_relation': 'Linearly Correlated',
+                          'non-linear_relation': 'Non-Linearly Correlated'}
+
+    fig, axs = plt.subplots(nrows=2, ncols=int(n_fun / 2), figsize=(80 * inch_conversion, 38 * inch_conversion),
+                            sharex=True, sharey=True)
+    fig.subplots_adjust(hspace=0.2, wspace=0.1, bottom=0.1, right=1, left=0.1)
+    axs = axs.flatten()
+    for i, fun_no in enumerate(range(n_fun)):
+        axs[i].plot(x_new, fs_new[i].numpy(), color='k')
+        if plot_data_points:
+            idx_train = np.where([fun_nos == fun_no])[1]
+            axs[i].scatter(data_X[idx_train], data_y[idx_train])
+            data_str = '_datapoints'
+        else:
+            data_str = ''
+        axs[i].set_ylim(np.min(data_y) - 0.5, np.max(data_y) + 0.5)
+
+    from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
+
+    for ax in axs:
+        #
+        ax.set_xticks([0, 1, 2])
+        ax.xaxis.set_major_locator(MultipleLocator(1))
+        ax.xaxis.set_major_formatter('{x:.0f}')
+
+        # For the minor ticks, use no labels; default NullFormatter.
+        ax.xaxis.set_minor_locator(AutoMinorLocator())
+        ax.yaxis.set_minor_locator(AutoMinorLocator())
+        ax.grid(None)
+
+    axs[0].set_ylabel('y', rotation=0)
+    axs[6].set_ylabel('y', rotation=0)
+
+    plt.subplots_adjust(bottom=0.15)
+    fig.supxlabel('x', fontsize=8)
+    plt.suptitle(f'{surface_type_names[surface_type]}', fontsize=8)
+
+    save_path = pl.Path().home() / 'TLGP_plots'
+    file_name = f'data_generating_functions_{surface_type}_{test_type}_points_seed_{seed}_dataseed_{dataseed}'
+
+    plt.savefig(save_path / f'{file_name}{data_str}.svg', bbox_inches='tight')
+    plt.savefig(save_path / f'{file_name}{data_str}.png', dpi=500, bbox_inches='tight')
+
+    return fig
+
 
 
 def plot_lvmogp_latent_variables(lvmogp, save=False, path=None, file_name=None):

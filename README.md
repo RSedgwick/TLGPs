@@ -57,7 +57,8 @@ Below is an overview of the code
   - `analysis_utils.py` - Useful functions for analysing the results
 - `notebooks`
   - `Comparing_LVMOGP_Prediction_Methods.ipynb` - Notebook for comparing different methods for prediction using the LVMOGP
-  - `LMC_fitting_and_intialisation.ipynb` - Notebook demonstrating the fitting of the LMC
+  - `fitting_all_models.ipynb` - Notebook for fitting all the models and saving plots of the predictions
+  - `lmc_fitting_and_intialisation.ipynb` - Notebook demonstrating the fitting of the LMC
   - `lmc_setting_W_and_kappa.ipynb` - Notebook demonstrating how the LMC can recreate the independent MOGP
 - `analysis`
   - `plots` - various plots that have been generated

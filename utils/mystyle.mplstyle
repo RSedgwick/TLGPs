@@ -20,7 +20,7 @@ mathtext.fontset : cm
 axes.facecolor: white #eeeeee
 axes.edgecolor: bcbcbc
 axes.grid : True
-axes.titlesize: 13
+axes.titlesize: 8
 axes.labelsize: 8
 xtick.labelsize: 8
 ytick.labelsize: 8
