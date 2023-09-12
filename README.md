@@ -44,9 +44,8 @@ where one random datapoint is added each time.
 
 ![image](analysis/plots/predictions_unrelated_two_observed_10_new_points_seed_1_dataseed_1.gif)
 
-## Code
+## Code Overview
 
-Below is an overview of the code 
 - `models`
   - `initializations.py` - Contains the initialization functions for the different transfer learning methods
   - `lvmogp.py` - Contains the code for the latent variable multi-output Gaussian process model, adapted from the GPflow Bayesian GPLVM code

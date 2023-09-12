@@ -6,6 +6,5 @@ cd $HOME/Transfer_Learning_Gaussian_Processes
 module load anaconda3/personal
 source activate tlgps
 
-
 python learning_curves.py --n_new_points=$PBS_ARRAY_INDEX --seed=$SEED --data_seed=$DATASEED --relation_tye=$RELATIONTYPE
 
