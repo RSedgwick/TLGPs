@@ -124,6 +124,7 @@ def plot_learning_curve_results(results_df, seeds, mean=False, save=False, path=
     :param mean: boolean, if True, plot the mean and standard deviation of the results"""
     model_names = ['mo_indi', 'avg', 'lmc', 'lvmogp', ]
     colors = get_colors()
+    linestyles = {'lmc': 'dashdot', 'mo_indi': 'dotted', 'lvmogp': 'solid', 'avg': 'dashed'}
 
     surface_type_names = {'unrelated': 'uncorrelated',
                           'linear_relation': 'linearly\ncorrelated',
@@ -153,7 +154,7 @@ def plot_learning_curve_results(results_df, seeds, mean=False, save=False, path=
                     temp_df = temp_df_.groupby('n_new_points').mean().reset_index()
                     label = mod_names[model_name]
                     ax[i].plot(temp_df['n_new_points'], temp_df[metric], alpha=0.8, color=colors[model_name],
-                               linewidth=2, label=label)
+                               linewidth=2, label=label, linestyle=linestyles[model_name])
 
                 else:
                     for data_seed in results_df['data_seed'].unique():
@@ -165,15 +166,18 @@ def plot_learning_curve_results(results_df, seeds, mean=False, save=False, path=
                         else:
                             label = None
                         ax[i].plot(temp_df['n_new_points'], temp_df[metric], alpha=0.8, color=colors[model_name],
-                                   linewidth=1, label=label)
+                                   linewidth=1, label=label, linestyle=linestyles[model_name])
             if potrait_orientation:
                 ax[0].set_title(metric_names[metric])
             else:
                 axs[j, 0].set_ylabel(metric_names[metric])
         if potrait_orientation:
             axs[i, 0].set_ylabel(surface_type_names[surface_type])
-            axs[i, 1].set_ylim(-2.5, 10)
-            axs[i, 0].set_ylim(0, 1)
+            axs[i, 1].set_ylim(-2.5, 5)
+            axs[i, 1].set_yticks([-2.5, 0, 2.5, 5])
+            axs[0, 0].set_ylim(0, 2)
+            axs[1, 0].set_ylim(0, 1)
+            axs[2, 0].set_ylim(0, 0.4)
         else:
             axs[0, i].set_title(surface_type_names[surface_type])
             axs[1, i].set_ylim(-2.5, 10)

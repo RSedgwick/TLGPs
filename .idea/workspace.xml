@@ -2,38 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e2d9556-704e-4d25-af62-883b224e8d9b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/notebooks/fitting_all_models.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/analysis/model_comparisons.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/model_comparisons.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plot_predictions.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plot_predictions.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plot_predictions.py" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plot_predictions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_all_seeds_mean.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_all_seeds_mean.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_all_seeds_mean.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_all_seeds_mean.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_mean.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_mean.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_mean.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_mean.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_mean.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_mean.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_mean.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_mean.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_mean.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_mean.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_mean.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_mean.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/metrics_all_seeds.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/metrics_all_seeds_[1].svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/metrics_all_seeds_[2].svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/metrics_all_seeds_[3].svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/metrics_seeds_1.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/metrics_seeds_2.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/metrics_seeds_3.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/metrics_seeds_[1].svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/metrics_seeds_[2].svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/metrics_seeds_[3].svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/LMC_fitting_and_intialisation.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/LMC_fitting_and_intialisation.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/mystyle.mplstyle" beforeDir="false" afterPath="$PROJECT_DIR$/utils/mystyle.mplstyle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_mean_potrait.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_mean_potrait.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_mean_potrait.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_mean_potrait.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_potrait.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_potrait.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_potrait.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_potrait.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_mean_potrait.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_mean_potrait.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_mean_potrait.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_mean_potrait.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_potrait.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_potrait.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_potrait.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_potrait.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_mean_potrait.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_mean_potrait.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_mean_potrait.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_mean_potrait.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_potrait.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_potrait.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_potrait.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_potrait.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/plotting_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/plotting_utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -243,7 +227,11 @@
       <workItem from="1685958628700" duration="810000" />
       <workItem from="1686039029511" duration="19732000" />
       <workItem from="1686732772222" duration="22638000" />
-      <workItem from="1686835795889" duration="9900000" />
+      <workItem from="1686835795889" duration="12964000" />
+      <workItem from="1688631462002" duration="1810000" />
+      <workItem from="1693401764601" duration="1264000" />
+      <workItem from="1694187419070" duration="2099000" />
+      <workItem from="1694418807589" duration="766000" />
     </task>
     <servers />
   </component>
@@ -335,7 +323,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
           <url>notebook:///home/ruby/Transfer_Learning_Gaussian_Processes/analysis/plot_predictions.ipynb</url>
-          <line>180</line>
+          <line>66</line>
           <option name="timeStamp" value="193" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -349,12 +337,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/utils/plotting_utils.py</url>
-          <line>307</line>
+          <line>312</line>
           <option name="timeStamp" value="190" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/utils/plotting_utils.py</url>
-          <line>86</line>
+          <line>87</line>
           <option name="timeStamp" value="198" />
         </line-breakpoint>
       </breakpoints>
