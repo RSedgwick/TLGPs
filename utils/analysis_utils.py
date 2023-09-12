@@ -79,13 +79,13 @@ def fit_model_from_hyperparameters(mod_df):
 
     if model_name == 'mo_indi':
         gp = mo_indi_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank)
-    if model_name == 'lmc':
+    elif model_name == 'lmc':
         gp = lmc_init(data_X, data_y, fun_nos, n_fun, observed_dims, lmc_rank)
         if any(hyp['.kernel.kernels[1].kappa'] < 1e-9):
             hyp['.kernel.kernels[1].kappa'] = hyp['.kernel.kernels[1].kappa'] + 1e-6
-    if model_name == 'avg':
+    elif model_name == 'avg':
         gp = avg_init(data_X, data_y, fun_nos, observed_dims)
-    if model_name == 'lvmogp':
+    else:
         latent_dims = 2
         gp = lvmogp_init(data_X, data_y, fun_nos, lengthscales=[1] * (observed_dims + latent_dims))
     print('build complete')

@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 from utils.utils import get_gridpoints, full_width, column_width
 import matplotlib.pyplot as plt
@@ -5,7 +7,8 @@ import matplotlib as mpl
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 import pathlib as pl
 
-mpl.style.use('/home/ruby/Transfer_Learning_Gaussian_Processes/utils/mystyle.mplstyle')
+path = pl.Path(os.getcwd())
+mpl.style.use(path /'mystyle.mplstyle')
 
 inch_conversion = 1/25.4
 full_width = 5.5984252
@@ -117,11 +120,13 @@ def plot_all_models_from_hyperparameters(model_dict, hyperparams, plot_new_ys=Tr
         plt.savefig(f'{save_path}.png', dpi=500, bbox_inches='tight')
     return fig
 
-def plot_learning_curve_results(results_df, seeds, mean=False, save=False, path=None, file_name=None, potrait_orientation=False):
+def plot_learning_curve_results(results_df, seeds, mean=False, save=False, path=None, file_name=None,
+                                potrait_orientation=False):
     """Plot the RMSE and the NLPD against iteration from the results dataframe
     :param results_df: pandas dataframe containing the results
     :param seeds: list of seeds
     :param mean: boolean, if True, plot the mean and standard deviation of the results"""
+
     model_names = ['mo_indi', 'avg', 'lmc', 'lvmogp', ]
     colors = get_colors()
     linestyles = {'lmc': 'dashdot', 'mo_indi': 'dotted', 'lvmogp': 'solid', 'avg': 'dashed'}

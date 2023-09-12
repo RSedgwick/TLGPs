@@ -12,7 +12,7 @@ from utils.plotting_utils import plot_lmls, plot_predictions, plot_lvmogp_latent
 import os
 import pathlib as pl
 import sys
-
+import argparse
 
 # mpl.style.use('models/mystyle.mplstyle')
 
@@ -23,25 +23,27 @@ tf.config.threading.set_intra_op_parallelism_threads(5)
 tf.config.threading.set_inter_op_parallelism_threads(5)
 
 # define variables
-sys_args = sys.argv[:]
 
-n_new_points = int(sys_args[1])  # number of points on new surfaces
-seed = int(sys_args[2])  # seed
-data_seed = int(sys_args[3])
-relation_type = int(sys_args[4])  # type of relationship between surfaces
+parser = argparse.ArgumentParser()
+parser.add_argument('--seed', type=int, default=0, help='random  for creating data')
+parser.add_argument('--n_new_points', type=int, default=10, help='number of points on new surfaces')
+parser.add_argument('--data_seed', type=int, default=None, help='random function for creating dataset')
+parser.add_argument('--relation_type', type=str, default='unrelated',
+                    help='the correlation structure between surfaces')
+args = parser.parse_args()
+seed = args.seed
+n_new_points = args.n_new_points
+data_seed = args.data_seed
+surface_type = args.relation_type
 
-if relation_type == 1:
-    surface_type = 'unrelated'
+if surface_type == 'unrelated':
     from models.test_functions import TestFunUncorrelated as TestFun
-elif relation_type == 2:
-    surface_type = 'linear_relation'
+elif surface_type == 'linear_relation':
     from models.test_functions import TestFunLinearCorrelation as TestFun
-elif relation_type == 3:
-    surface_type = 'non-linear_relation'
+elif surface_type == 'non-linear_relation':
     from models.test_functions import TestFunNonLinearCorrelation as TestFun
-
 else:
-    raise ValueError('relation_type must be in {1, 2, 3}')
+    raise ValueError('relation_type must be in unrelated, linear_relation, non-linear_relation')
 
 set_seed = True
 
@@ -135,8 +137,3 @@ print('saved models')
 save_results(results_df, path, seed, n_new_points, surface_type, n_new_funs, data_seed)
 
 print('run complete')
-
-
-# for each model: fit each initialisation for n restarts and save the lml and rmse and nlpd for each. also save the results
-# for the best of each model
-# have option to plot and save the predictions of each model, and save the hyperparameters

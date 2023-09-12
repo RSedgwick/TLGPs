@@ -9,17 +9,15 @@ from gpflow.config import default_float, default_jitter
 from gpflow.expectations import expectation
 from gpflow.inducing_variables import InducingPoints
 from gpflow.kernels import Kernel
-from gpflow.mean_functions import MeanFunction, Zero
+
 from gpflow.probability_distributions import DiagonalGaussian
 from gpflow.utilities import positive, to_default_float, triangular
-from gpflow.utilities.ops import pca_reduce
-from gpflow.models.gpr import GPR
+
 from gpflow.models.model import GPModel, MeanAndVariance
 from gpflow.models.training_mixins import InputData, InternalDataTrainingLossMixin, OutputData
 from gpflow.models.util import data_input_to_tensor, inducingpoint_wrapper
 from gpflow.utilities import assert_params_false
 
-from gpflow import kullback_leiblers
 from gpflow.covariances.dispatch import Kuf, Kuu
 
 tf.config.run_functions_eagerly(True)

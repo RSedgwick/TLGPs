@@ -7,5 +7,5 @@ module load anaconda3/personal
 source activate tlgps
 
 
-python learning_curves.py $PBS_ARRAY_INDEX $SEED $DATASEED $RELATIONTYPE
+python learning_curves.py --n_new_points=$PBS_ARRAY_INDEX --seed=$SEED --data_seed=$DATASEED --relation_tye=$RELATIONTYPE
 
