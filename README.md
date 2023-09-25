@@ -35,6 +35,7 @@ expect each model to perform well:
 
 Below is a plot of the mean of the RMSE and NLPD for each of the methods for three different test function scenarios for one seed. 
 For each scenario we have 10 new surfaces being learnt and 5 different random data sets. This plot appears in Figure 4 of Sedgwick et al. [1]
+
 ![image](analysis/plots/learning_curves_seed_2_mean_potrait.svg)
 
 And below is a gif of the predictions of each of the models for one test scenario, 
