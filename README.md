@@ -1,6 +1,6 @@
 # Transfer Learning Gaussian Processes
 
-Comparison of different transfer learning Gaussian process methods on synthetic data.
+Comparison of different transfer learning Gaussian process methods on synthetic data. This comparison was conducted for the paper _Transfer Learning Bayesian Optimization for Competitor DNA Molecule Design for Use in Diagnostic Assays_ [1].
 
 ## Installation
 
@@ -20,7 +20,7 @@ In this repo we run experiments to compare four different transfer learning meth
 1. Independent multioutput Gaussian process (MOGP)
 2. Average Gaussian process where all data is considered to be from the same surface
 3. Linear Model of Coregionalisation (LMC) 
-4. Latent Variable Multioutput Gaussian Process (LVMOGP) [1]
+4. Latent Variable Multioutput Gaussian Process (LVMOGP) [2]
 
 We run experiments for all these methods on three different test function scenarios to contrast situations in which we
 expect each model to perform well:
@@ -31,14 +31,11 @@ expect each model to perform well:
 3. Non-linearly-related test functions
    1. We expect the LVMOGP to outperform the MOGP and LMC here
 
-[1] [Dai, Zhenwen, Mauricio Álvarez, and Neil Lawrence. "Efficient modeling of latent information in supervised learning using gaussian processes." Advances in Neural Information Processing Systems 30 (2017).](https://arxiv.org/abs/1705.09862)
-
 ## Results
 
-
-Below is a plot of the mean of the RMSE and NLPD for each of the methods for three different test function scenarios. 
-For each scenario we have 10 new surfaces being learnt and 5 different random data sets.
-![image](analysis/plots/metrics_seeds_2.svg)
+Below is a plot of the mean of the RMSE and NLPD for each of the methods for three different test function scenarios for one seed. 
+For each scenario we have 10 new surfaces being learnt and 5 different random data sets. This plot appears in Figure 4 of Sedgwick et al. [1]
+![image](analysis/plots/learning_curves_seed_2_mean_potrait.svg)
 
 And below is a gif of the predictions of each of the models for one test scenario, 
 where one random datapoint is added each time.
@@ -69,6 +66,11 @@ Also plot the log marginal likelihood of the different initialisations at each n
   - `animating_plots.ipynb` - notebook for making gifs out of predictions
 - `learning_curves.py` - this script is used for fitting each of the models, analysing the results and saving them to a file
   - The `.pbs` scripts can be used to run this many times for different seeds and number of training points on a cluster
+ 
+## References
+
+[1] [Sedgwick, Ruby and Goertz, John and Stevens, Molly and Misener, Ruth and van der Wilk, Mark. "Transfer Learning Bayesian Optimization for Competitor DNA Molecule Design for Use in Diagnostic Assays" (2023)]()
+[2] [Dai, Zhenwen, Mauricio Álvarez, and Neil Lawrence. "Efficient modeling of latent information in supervised learning using gaussian processes." Advances in Neural Information Processing Systems 30 (2017).](https://arxiv.org/abs/1705.09862)
  
 ## How to Cite 
 When using the code in this repository, please reference our journal paper as:
