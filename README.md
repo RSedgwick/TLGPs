@@ -1,6 +1,7 @@
 # Transfer Learning Gaussian Processes
 
 Comparison of different transfer learning Gaussian process methods on synthetic data.
+
 ## Installation
 
 To clone this repo use the command:
@@ -62,9 +63,25 @@ where one random datapoint is added each time.
 - `analysis`
   - `plots` - various plots that have been generated
   - `model_comparison.ipynb` - Notebook comparing the RMSE and NLPD of the different models from the many learning curve runs
-  - `plot_predictions.ipynb` - plot the predictions of the models for a given seed, data seed and number of training points. 
-Also plot the log marginal likelihood of the different initialisations at each number of training points for all models. 
+  - `plot_predictions.ipynb` - plot the predictions of the models for a given seed, data seed and number of training points
+Also plot the log marginal likelihood of the different initialisations at each number of training points for all models
   - `plot_predictions.py` - plot the predictions for all runs, to be made into gifs
   - `animating_plots.ipynb` - notebook for making gifs out of predictions
 - `learning_curves.py` - this script is used for fitting each of the models, analysing the results and saving them to a file
   - The `.pbs` scripts can be used to run this many times for different seeds and number of training points on a cluster
+ 
+## How to Cite 
+When using the code in this repository, please reference our journal paper as:
+```
+@article{thebelt2021entmoot,
+  title={Transfer Learning Bayesian Optimization for Competitor DNA Molecule Design for Use in Diagnostic Assays},
+  author={Sedgwick, Ruby and Goertz, John and Stevens, Molly and Misener, Ruth and van der Wilk, Mark},
+  journal={},
+  volume={},
+  pages={},
+  year={},
+  publisher={}
+}
+```
+## Acknoledgements
+This work was supported by the [UKRI CDT in AI for Healthcare](https://ai4health.io/) Grant No. EP/S023283/1 
