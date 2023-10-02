@@ -2,23 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e2d9556-704e-4d25-af62-883b224e8d9b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/model_comparisons.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/model_comparisons.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_all_seeds_mean.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_all_seeds_mean.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_all_seeds_mean.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_all_seeds_mean.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_mean_potrait.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_mean_potrait.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_mean_potrait.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_mean_potrait.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_potrait.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_potrait.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_potrait.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_1_potrait.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_mean_potrait.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_mean_potrait.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_mean_potrait.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_mean_potrait.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_potrait.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_potrait.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_potrait.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_2_potrait.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_mean_potrait.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_mean_potrait.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_mean_potrait.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_mean_potrait.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_potrait.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_potrait.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_potrait.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/learning_curves_seed_3_potrait.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/plotting_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/plotting_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/subset_runs.pbs" beforeDir="false" afterPath="$PROJECT_DIR$/subset_runs.pbs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +40,9 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedIndex" value="2" />
+  </component>
   <component name="ProjectId" id="2PxW73lzqTUTWOyZMpNXiFpw5xs" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -67,6 +55,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/model_learning_curves" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="advanced.settings" />
   </component>
   <component name="RecentsManager">
@@ -232,6 +221,7 @@
       <workItem from="1693401764601" duration="1264000" />
       <workItem from="1694187419070" duration="2099000" />
       <workItem from="1694418807589" duration="766000" />
+      <workItem from="1694532327178" duration="3050000" />
     </task>
     <servers />
   </component>
@@ -273,27 +263,27 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
           <url>notebook:///home/ruby/Transfer_Learning_Gaussian_Processes/notebooks/Comparing_LVMOGP_Prediction_Methods.ipynb</url>
-          <line>80</line>
+          <line>81</line>
           <option name="timeStamp" value="90" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
           <url>notebook:///home/ruby/Transfer_Learning_Gaussian_Processes/notebooks/Comparing_LVMOGP_Prediction_Methods.ipynb</url>
-          <line>79</line>
+          <line>80</line>
           <option name="timeStamp" value="91" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
           <url>notebook:///home/ruby/Transfer_Learning_Gaussian_Processes/notebooks/Comparing_LVMOGP_Prediction_Methods.ipynb</url>
-          <line>119</line>
+          <line>120</line>
           <option name="timeStamp" value="93" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
           <url>notebook:///home/ruby/Transfer_Learning_Gaussian_Processes/notebooks/Comparing_LVMOGP_Prediction_Methods.ipynb</url>
-          <line>90</line>
+          <line>91</line>
           <option name="timeStamp" value="94" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
           <url>notebook:///home/ruby/Transfer_Learning_Gaussian_Processes/notebooks/Comparing_LVMOGP_Prediction_Methods.ipynb</url>
-          <line>145</line>
+          <line>146</line>
           <option name="timeStamp" value="95" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
@@ -337,12 +327,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/utils/plotting_utils.py</url>
-          <line>312</line>
+          <line>317</line>
           <option name="timeStamp" value="190" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/utils/plotting_utils.py</url>
-          <line>87</line>
+          <line>90</line>
           <option name="timeStamp" value="198" />
         </line-breakpoint>
       </breakpoints>
