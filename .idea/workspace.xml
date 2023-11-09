@@ -2,8 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e2d9556-704e-4d25-af62-883b224e8d9b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/subset_runs.pbs" beforeDir="false" afterPath="$PROJECT_DIR$/subset_runs.pbs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/analysis/mystyle.mplstyle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plot_predictions.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plot_predictions.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_avg.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_avg.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_avg.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_avg.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_lmc.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_lmc.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_lmc.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_lmc.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_lvmogp.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_lvmogp.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_lvmogp.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_lvmogp.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_mo_indi.png" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_mo_indi.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_mo_indi.svg" beforeDir="false" afterPath="$PROJECT_DIR$/analysis/plots/log_marginal_likelihoods_seed_2_dataseed_3_mo_indi.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/Comparing_LVMOGP_Prediction_Methods.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/Comparing_LVMOGP_Prediction_Methods.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/can_we_get_the_lmc_to_perform_the_same_as_indi.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/can_we_get_the_lmc_to_perform_the_same_as_indi.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/lmc_fitting_and_intialisation.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/lmc_fitting_and_intialisation.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/plotting_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/plotting_utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +65,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/model_learning_curves" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/notebooks" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
@@ -60,9 +73,9 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/notebooks" />
       <recent name="$PROJECT_DIR$/model_learning_curves" />
       <recent name="$PROJECT_DIR$/models" />
-      <recent name="$PROJECT_DIR$/notebooks" />
       <recent name="$PROJECT_DIR$/code" />
       <recent name="$PROJECT_DIR$" />
     </key>
@@ -222,6 +235,8 @@
       <workItem from="1694187419070" duration="2099000" />
       <workItem from="1694418807589" duration="766000" />
       <workItem from="1694532327178" duration="3050000" />
+      <workItem from="1696258969636" duration="4603000" />
+      <workItem from="1696332382945" duration="839000" />
     </task>
     <servers />
   </component>
@@ -315,6 +330,21 @@
           <url>notebook:///home/ruby/Transfer_Learning_Gaussian_Processes/analysis/plot_predictions.ipynb</url>
           <line>66</line>
           <option name="timeStamp" value="193" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
+          <url>notebook:///home/ruby/Transfer_Learning_Gaussian_Processes/analysis/plot_predictions.ipynb</url>
+          <line>225</line>
+          <option name="timeStamp" value="200" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
+          <url>notebook:///home/ruby/Transfer_Learning_Gaussian_Processes/analysis/plot_predictions.ipynb</url>
+          <line>223</line>
+          <option name="timeStamp" value="201" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
+          <url>notebook:///home/ruby/Transfer_Learning_Gaussian_Processes/analysis/plot_predictions.ipynb</url>
+          <line>210</line>
+          <option name="timeStamp" value="202" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/utils/utils.py</url>

@@ -252,7 +252,7 @@ def plot_log_marginal_likelihoods_of_restarts(hyp_df, seed, data_seed, save=Fals
                 ax[k].set_ylim(-150, 500)
         plt.suptitle(mod_names[model_name])
         # plt.subplots(hspace=0.8)
-        axs[1, 1].legend(bbox_to_anchor=(0.5, -0.5), loc='lower center', ncol=len(hyp_df_model['init_type'].unique()))
+        ax[2].legend(bbox_to_anchor=(0.5, -0.5), loc='lower center', ncol=len(hyp_df_model['init_type'].unique()))
         if save:
             plt.savefig(path / f'{file_name}_seed_{seed}_dataseed_{data_seed}_{model_name}.svg', bbox_inches='tight')
             plt.savefig(path / f'{file_name}_seed_{seed}_dataseed_{data_seed}_{model_name}.png', dpi=500, bbox_inches='tight')
