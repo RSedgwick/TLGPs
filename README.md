@@ -67,7 +67,8 @@ where one random datapoint is added each time.
 Also plot the log marginal likelihood of the different initialisations at each number of training points for all models
   - `plot_predictions.py` - plot the predictions for all runs, to be made into gifs
   - `animating_plots.ipynb` - notebook for making gifs out of predictions
-- `learning_curves.py` - this script is used for fitting each of the models, analysing the results and saving them to a file
+- `experiments`
+  - `learning_curves.py` - this script is used for fitting each of the models, analysing the results and saving them to a file
   - The `.pbs` scripts can be used to run this many times for different seeds and number of training points on a cluster
  
 ## References
