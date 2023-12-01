@@ -17,10 +17,10 @@ command in the root directory of the project:
 
 In this repo we run experiments to compare four different transfer learning methods:
 
-1. Independent multioutput Gaussian process (MOGP)
+1. Independent multioutput Gaussian process (MOGP) [2]
 2. Average Gaussian process where all data is considered to be from the same surface (AvgGP)
-3. Linear Model of Coregionalisation (LMC) 
-4. Latent Variable Multioutput Gaussian Process (LVMOGP) [2]
+3. Linear Model of Coregionalisation (LMC) [2]
+4. Latent Variable Multioutput Gaussian Process (LVMOGP) [3]
 
 We run experiments for all these methods on three different test function scenarios based on situations in which we
 expect each model to perform well:
@@ -49,7 +49,7 @@ where one random datapoint is added each time.
 
 - `models`
   - `initializations.py` - Contains the initialization functions for the different transfer learning methods
-  - `lvmogp.py` - Contains the code for the latent variable multi-output Gaussian process model, adapted from the GPflow Bayesian GPLVM code [3]
+  - `lvmogp.py` - Contains the code for the latent variable multi-output Gaussian process model, adapted from the GPflow Bayesian GPLVM code [4]
   - `test_functions.py` - Code for generating the synthetic data
 - `utils`
   - `utils.py` - Useful functions for initalising models, fitting them, getting performance metrics and saving results
@@ -73,8 +73,9 @@ Also plot the log marginal likelihood of the different initialisations at each n
 ## References
 
 [1] [Sedgwick, Ruby and Goertz, John and Stevens, Molly and Misener, Ruth and van der Wilk, Mark. "Transfer Learning Bayesian Optimization for Competitor DNA Molecule Design for Use in Diagnostic Assays" (2023)]()
-[2] [Dai, Zhenwen, Mauricio Álvarez, and Neil Lawrence. "Efficient modeling of latent information in supervised learning using gaussian processes." Advances in Neural Information Processing Systems 30 (2017).](https://arxiv.org/abs/1705.09862)
-[3] [Matthews, Alexander G. et al. (Jan. 2017). “GPflow: a Gaussian process library using tensorflow”. In: The Journal of Machine Learning Research 18.1, pp. 1299–1304. issn: 1532-4435](https://jmlr.org/papers/volume18/16-537/16-537.pdf)
+[2] [Álvarez, Mauricio A., Lorenzo Rosasco, and Neil D. Lawrence (June 2012). “Kernels for Vector-Valued Functions: A Review”. doi: 10.1561/2200000036.](https://arxiv.org/abs/1106.6251)
+[3] [Dai, Zhenwen, Mauricio Álvarez, and Neil Lawrence. "Efficient modeling of latent information in supervised learning using gaussian processes." Advances in Neural Information Processing Systems 30 (2017).](https://arxiv.org/abs/1705.09862)
+[4] [Matthews, Alexander G. et al. (Jan. 2017). “GPflow: a Gaussian process library using tensorflow”. In: The Journal of Machine Learning Research 18.1, pp. 1299–1304. issn: 1532-4435](https://jmlr.org/papers/volume18/16-537/16-537.pdf)
  
 ## How to Cite 
 When using the code in this repository, please reference our journal paper as:
