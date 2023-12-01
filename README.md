@@ -18,11 +18,11 @@ command in the root directory of the project:
 In this repo we run experiments to compare four different transfer learning methods:
 
 1. Independent multioutput Gaussian process (MOGP)
-2. Average Gaussian process where all data is considered to be from the same surface
+2. Average Gaussian process where all data is considered to be from the same surface (AvgGP)
 3. Linear Model of Coregionalisation (LMC) 
 4. Latent Variable Multioutput Gaussian Process (LVMOGP) [2]
 
-We run experiments for all these methods on three different test function scenarios to contrast situations in which we
+We run experiments for all these methods on three different test function scenarios based on situations in which we
 expect each model to perform well:
 1. Unrelated test functions 
    1. if there is no negative transfer we would expect the MOGP, LMC and LVMOGP to perform similarly here
@@ -30,11 +30,13 @@ expect each model to perform well:
    1. We expect the LMC and LVMOGP to outperform the MOGP here
 3. Non-linearly-related test functions
    1. We expect the LVMOGP to outperform the MOGP and LMC here
+We expect the MOGP, LMC and LVMOGP to outperform the AvgGP on all test scenarios.
 
 ## Results
 
-Below is a plot of the mean of the RMSE and NLPD for each of the methods for three different test function scenarios for one seed. 
-For each scenario we have 10 new surfaces being learnt and 5 different random data sets. This plot appears in Figure 4 of Sedgwick et al. [1]
+Below is a plot of the mean of the root mean squared error (RMSE) and negative log predictive density (NLPD) for each of the methods for three 
+different test function scenarios for one seed. For each scenario we have 10 new surfaces being learnt and 5 different random data sets. This 
+plot appears in Figure 4 of Sedgwick et al. [1]
 
 ![image](analysis/plots/learning_curves_seed_2_mean_potrait.svg)
 
@@ -47,7 +49,7 @@ where one random datapoint is added each time.
 
 - `models`
   - `initializations.py` - Contains the initialization functions for the different transfer learning methods
-  - `lvmogp.py` - Contains the code for the latent variable multi-output Gaussian process model, adapted from the GPflow Bayesian GPLVM code
+  - `lvmogp.py` - Contains the code for the latent variable multi-output Gaussian process model, adapted from the GPflow Bayesian GPLVM code [3]
   - `test_functions.py` - Code for generating the synthetic data
 - `utils`
   - `utils.py` - Useful functions for initalising models, fitting them, getting performance metrics and saving results
@@ -72,11 +74,12 @@ Also plot the log marginal likelihood of the different initialisations at each n
 
 [1] [Sedgwick, Ruby and Goertz, John and Stevens, Molly and Misener, Ruth and van der Wilk, Mark. "Transfer Learning Bayesian Optimization for Competitor DNA Molecule Design for Use in Diagnostic Assays" (2023)]()
 [2] [Dai, Zhenwen, Mauricio Álvarez, and Neil Lawrence. "Efficient modeling of latent information in supervised learning using gaussian processes." Advances in Neural Information Processing Systems 30 (2017).](https://arxiv.org/abs/1705.09862)
+[3] [Matthews, Alexander G. et al. (Jan. 2017). “GPflow: a Gaussian process library using tensorflow”. In: The Journal of Machine Learning Research 18.1, pp. 1299–1304. issn: 1532-4435](https://jmlr.org/papers/volume18/16-537/16-537.pdf)
  
 ## How to Cite 
 When using the code in this repository, please reference our journal paper as:
 ```
-@article{thebelt2021entmoot,
+@article{sedgwick_transfer_2023,
   title={Transfer Learning Bayesian Optimization for Competitor DNA Molecule Design for Use in Diagnostic Assays},
   author={Sedgwick, Ruby and Goertz, John and Stevens, Molly and Misener, Ruth and van der Wilk, Mark},
   journal={},
