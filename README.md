@@ -6,7 +6,7 @@ Comparison of different transfer learning Gaussian process methods on synthetic 
 
 To clone this repo use the command:
     
-     git clone https://github.com/RSedgwick/Transfer_Learning_Gaussian_Processes.git
+     git clone https://github.com/RSedgwick/TLGPs.git
 
 The code is written in Python 3.6. To install the required packages, ensure conda is installed and run the following 
 command in the root directory of the project:
