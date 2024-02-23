@@ -15,7 +15,7 @@ command in the root directory of the project:
 
 ## Overview 
 
-In this repo we run experiments to compare four different transfer learning methods:
+In this repo, we run experiments to compare four different transfer learning methods:
 
 1. Independent multioutput Gaussian process (MOGP) [2]
 2. Average Gaussian process where all data is considered to be from the same surface (AvgGP)
@@ -35,12 +35,12 @@ We expect the MOGP, LMC and LVMOGP to outperform the AvgGP on all test scenarios
 ## Results
 
 Below is a plot of the mean of the root mean squared error (RMSE) and negative log predictive density (NLPD) for each of the methods for three 
-different test function scenarios for one seed. For each scenario we have 10 new surfaces being learnt and 5 different random data sets. This 
+different test function scenarios for one seed. For each scenario, we have 10 new surfaces being learnt and 5 different random data sets. This 
 plot appears in Figure 4 of Sedgwick et al. [1]
 
 ![image](analysis/plots/learning_curves_seed_2_mean_potrait.svg)
 
-And below is a gif of the predictions of each of the models for one test scenario, 
+Below is a gif of the predictions of each of the models for one test scenario, 
 where one random datapoint is added each time.
 
 ![image](analysis/plots/predictions_unrelated_two_observed_10_new_points_seed_1_dataseed_1.gif)
@@ -52,7 +52,7 @@ where one random datapoint is added each time.
   - `lvmogp.py` - Contains the code for the latent variable multi-output Gaussian process model, adapted from the GPflow Bayesian GPLVM code [4]
   - `test_functions.py` - Code for generating the synthetic data
 - `utils`
-  - `utils.py` - Useful functions for initalising models, fitting them, getting performance metrics and saving results
+  - `utils.py` - Useful functions for initialising models, fitting them, getting performance metrics and saving results
   - `plotting_utils.py` - Useful functions for plotting functions and performance metrics
   - `analysis_utils.py` - Useful functions for analysing the results
 - `notebooks`
@@ -64,7 +64,7 @@ where one random datapoint is added each time.
   - `plots` - various plots that have been generated
   - `model_comparison.ipynb` - Notebook comparing the RMSE and NLPD of the different models from the many learning curve runs
   - `plot_predictions.ipynb` - plot the predictions of the models for a given seed, data seed and number of training points
-Also plot the log marginal likelihood of the different initialisations at each number of training points for all models
+Also, plot the log marginal likelihood of the different initialisations at each number of training points for all models
   - `plot_predictions.py` - plot the predictions for all runs, to be made into gifs
   - `animating_plots.ipynb` - notebook for making gifs out of predictions
 - `experiments`
@@ -79,7 +79,7 @@ Also plot the log marginal likelihood of the different initialisations at each n
 [4] [Matthews, Alexander G. et al. (Jan. 2017). “GPflow: a Gaussian process library using tensorflow”. In: The Journal of Machine Learning Research 18.1, pp. 1299–1304. issn: 1532-4435](https://jmlr.org/papers/volume18/16-537/16-537.pdf)
  
 ## How to Cite 
-When using the code in this repository, please reference our journal paper as:
+When using the code in this repository, please reference our journal paper:
 ```
 @article{sedgwick_transfer_2023,
   title={Transfer Learning Bayesian Optimization for Competitor DNA Molecule Design for Use in Diagnostic Assays},
@@ -91,5 +91,5 @@ When using the code in this repository, please reference our journal paper as:
   publisher={}
 }
 ```
-## Acknoledgements
+## Acknowledgements
 This work was supported by the [UKRI CDT in AI for Healthcare](https://ai4health.io/) Grant No. EP/S023283/1 
