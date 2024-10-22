@@ -73,7 +73,7 @@ Also, plot the log marginal likelihood of the different initialisations at each 
  
 ## References
 
-[1] [Sedgwick, Ruby and Goertz, John and Stevens, Molly and Misener, Ruth and van der Wilk, Mark. "Transfer Learning Bayesian Optimization to Design Competitor DNA Molecules for Use in Diagnostic Assays" (2023)](https://arxiv.org/abs/2402.17704)
+[1] [Sedgwick, Ruby and Goertz, John and Stevens, Molly and Misener, Ruth and van der Wilk, Mark. "Transfer Learning Bayesian Optimization to Design Competitor DNA Molecules for Use in Diagnostic Assays" (2023)](https://analyticalsciencejournals.onlinelibrary.wiley.com/doi/10.1002/bit.28854)
 [2] [Álvarez, Mauricio A., Lorenzo Rosasco, and Neil D. Lawrence (June 2012). “Kernels for Vector-Valued Functions: A Review”. doi: 10.1561/2200000036.](https://arxiv.org/abs/1106.6251)
 [3] [Dai, Zhenwen, Mauricio Álvarez, and Neil Lawrence. "Efficient modeling of latent information in supervised learning using gaussian processes." Advances in Neural Information Processing Systems 30 (2017).](https://arxiv.org/abs/1705.09862)
 [4] [Matthews, Alexander G. et al. (Jan. 2017). “GPflow: a Gaussian process library using tensorflow”. In: The Journal of Machine Learning Research 18.1, pp. 1299–1304. issn: 1532-4435](https://jmlr.org/papers/volume18/16-537/16-537.pdf)
